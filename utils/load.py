@@ -2,5 +2,6 @@ import requests
 
 
 class Loader:
-    def get_data(self, url):
+    @staticmethod
+    def get_json(url):
         return requests.get(url).content
