@@ -24,7 +24,11 @@ class Configuration:
         else:
             url += '&'
         for key in dataset.FILTERS:
-            url += key + '=' + str(dataset.FILTERS[key]) + '&'
+            if isinstance(dataset.FILTERS[key], list):
+                for value in dataset.FILTERS[key]:
+                    url += key + '=' + str(value) + '&'
+            else:
+                url += key + '=' + str(dataset.FILTERS[key]) + '&'
         url = url[0:-1]
         return url
 

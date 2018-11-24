@@ -6,7 +6,7 @@ from utils.data_parse import parse_json
 def run():
     configuration = Configuration()
     loader = Loader()
-    url = configuration.get_url('demo_mlexpec')
+    url = configuration.get_url('ilc_li02')
     print(url)
     json = loader.get_json(url)
     life_expectancy = parse_json(json)
