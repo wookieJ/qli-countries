@@ -9,7 +9,7 @@ from config.material import gross_domestic_product
 from config.material import leaking_roof_population
 from config.material import poverty_risk
 
-EUROSTAT_COMMON_CONFIG = {
+API_COMMON_CONFIG = {
     'host': 'http://ec.europa.eu/eurostat/wdds/rest/data/v2.1',
     'language': 'en',
     'format': 'json'
@@ -26,7 +26,7 @@ SEX = {
 }
 
 FILTERS = {
-    'sinceTimePeriod': 2004,
+    # 'sinceTimePeriod': 2004,
     'precision': 1,
     'sex': SEX['total']
 }

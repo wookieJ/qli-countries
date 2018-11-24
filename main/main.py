@@ -1,17 +1,12 @@
-from utils.config_loader import Configuration
-from utils.load import Loader
-from utils.data_parse import parse_json
+from model.parameter import Parameter
 
 
 def run():
-    configuration = Configuration()
-    loader = Loader()
-    url = configuration.get_url('ilc_li02')
-    print(url)
-    json = loader.get_json(url)
-    life_expectancy = parse_json(json)
-    print(life_expectancy)
-    print(life_expectancy.get('value'))
+    parameter = Parameter('health')
+    parameter.load_sub_params()
+    parameter.print_sub_params_values(print_label=True)
+    print('Raw values:')
+    print(parameter.get_values())
 
 
 if __name__ == '__main__':
