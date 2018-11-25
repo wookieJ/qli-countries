@@ -1,6 +1,6 @@
-from utils.config_loader import Configuration
-from utils.load import Loader
-from utils.data_parse import parse_json
+from script.utils.config_loader import Configuration
+from script.utils.load import Loader
+from script.utils.data_parse import parse_json
 
 
 class Parameter:

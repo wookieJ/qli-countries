@@ -1,4 +1,4 @@
-from config import common
+from script.config import common
 
 
 class Configuration:

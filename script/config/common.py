@@ -1,13 +1,7 @@
-from config.health import life_expectancy
-from config.health import healthy_life_years
-from config.health import unmet_medical_exams
-from config.education import teritiary_education_level
-from config.education import participation_rate_in_education
-from config.education import early_leavers_from_education
-from config.material import mean_median_net_income
-from config.material import gross_domestic_product
-from config.material import leaking_roof_population
-from config.material import poverty_risk
+from script.config.health import life_expectancy, unmet_medical_exams, healthy_life_years
+from script.config.education import participation_rate_in_education, early_leavers_from_education, \
+    teritiary_education_level
+from script.config.material import mean_median_net_income, leaking_roof_population, poverty_risk, gross_domestic_product
 
 API_COMMON_CONFIG = {
     'host': 'http://ec.europa.eu/eurostat/wdds/rest/data/v2.1',
