@@ -92,3 +92,15 @@ class Configuration:
             return common.QOL_PARAMS[param_name]
         else:
             return None
+
+    @staticmethod
+    def get_value(key):
+        """
+        Getting value of key in configuration file
+
+        :param key: key of value we want to know
+        :return: value of key in configuration file
+        """
+        for qol_param in common.QOL_PARAMS:
+            if key in common.QOL_PARAMS[qol_param]:
+                return common.QOL_PARAMS[qol_param][key]
