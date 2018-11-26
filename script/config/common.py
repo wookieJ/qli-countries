@@ -25,18 +25,22 @@ FILTERS = {
     'sex': SEX['total']
 }
 
+HEALTH = 'health'
+EDUCATION = 'education'
+MATERIAL_CONDITIONS = 'material_living_conditions'
+
 QOL_PARAMS = {
-    'health': {
+    HEALTH: {
         'demo_mlexpec': life_expectancy,
         'hlth_hlye': healthy_life_years,
         'hlth_silc_14': unmet_medical_exams
     },
-    'education': {
+    EDUCATION: {
         'edat_lfse_03': teritiary_education_level,
         'trng_lfs_02': participation_rate_in_education,
         'edat_lfse_14': early_leavers_from_education
     },
-    'material_living_conditions': {
+    MATERIAL_CONDITIONS: {
         'ilc_di03': mean_median_net_income,
         'nama_10_pc': gross_domestic_product,
         'ilc_mdho01': leaking_roof_population,

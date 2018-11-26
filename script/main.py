@@ -1,12 +1,16 @@
 from script.model.parameter import Parameter
+from script.config import common
 
 
 def run():
-    parameter = Parameter('health')
+    parameter = Parameter(common.HEALTH)
     parameter.load_sub_params()
     parameter.print_sub_params_values(print_label=True)
-    print('Raw values:')
-    print(parameter.get_values(2016, 'PL'))
+    country = 'PL'
+    for year in range (1990, 2019):
+        print(f'\nHealth features for {country} in {year}:')
+        data = parameter.get_values(year, country)
+        print(f'{data}, len = {len(data)}')
 
 
 if __name__ == '__main__':

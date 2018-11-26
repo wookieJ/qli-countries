@@ -24,6 +24,7 @@ class Parameter:
                     print(f'Database: {self.configuration.get_value(sub_param)}, url: {url}')
                     self.sub_params.append(parse_json(data))
                 break
+        print()
 
     def print_sub_params_values(self, print_label=False):
         """
@@ -92,7 +93,7 @@ class Parameter:
     def get_values(self, year, geo):
         """
         Get all parameter raw values
-todo - test
+
         :return: list of all parameter values
         """
         values = []
@@ -101,5 +102,8 @@ todo - test
                 data = self.__get_index(sub_param, year, geo)
                 if data is not None:
                     for d in data:
-                        values.append(sub_param['value'][str(d)])
+                        if str(d) in sub_param['value']:
+                            values.append(sub_param['value'][str(d)])
+                        else:
+                            values.append(':')
         return values
