@@ -1,71 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.Slider?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<VBox prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="qli.Controller">
   <children>
-    <MenuBar VBox.vgrow="NEVER">
-      <menus>
-        <Menu mnemonicParsing="false" text="File">
-          <items>
-            <MenuItem mnemonicParsing="false" text="New" />
-            <MenuItem mnemonicParsing="false" text="Open…" />
-            <Menu mnemonicParsing="false" text="Open Recent" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Close" />
-            <MenuItem mnemonicParsing="false" text="Save" />
-            <MenuItem mnemonicParsing="false" text="Save As…" />
-            <MenuItem mnemonicParsing="false" text="Revert" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Preferences…" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Quit" />
-          </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Edit">
-          <items>
-            <MenuItem mnemonicParsing="false" text="Undo" />
-            <MenuItem mnemonicParsing="false" text="Redo" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Cut" />
-            <MenuItem mnemonicParsing="false" text="Copy" />
-            <MenuItem mnemonicParsing="false" text="Paste" />
-            <MenuItem mnemonicParsing="false" text="Delete" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" text="Select All" />
-            <MenuItem mnemonicParsing="false" text="Unselect All" />
-          </items>
-        </Menu>
-        <Menu mnemonicParsing="false" text="Help">
-          <items>
-            <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
-          </items>
-        </Menu>
-      </menus>
-    </MenuBar>
-      <HBox>
+      <HBox alignment="CENTER_LEFT">
          <children>
-            <ScrollPane hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
-                     <children>
-                        <ListView fx:id="listFactors" prefHeight="200.0" prefWidth="200.0" />
-                     </children>
-                  </AnchorPane>
-              </content>
-            </ScrollPane>
-            <LineChart fx:id="factorChart" prefHeight="200.0" prefWidth="874.0" title="Education">
+            <VBox prefHeight="181.0">
+               <children>
+                  <Label alignment="TOP_CENTER" text="Choose factor" textAlignment="CENTER" VBox.vgrow="ALWAYS">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets left="5.0" />
+                     </VBox.margin>
+                  </Label>
+                  <ScrollPane hbarPolicy="NEVER" prefWidth="202.0">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
+                           <children>
+                              <ListView fx:id="listFactors" prefHeight="200.0" prefWidth="200.0" />
+                           </children>
+                        </AnchorPane>
+                    </content>
+                     <VBox.margin>
+                        <Insets left="5.0" />
+                     </VBox.margin>
+                  </ScrollPane>
+               </children>
+            </VBox>
+            <LineChart fx:id="factorChart" legendSide="RIGHT" prefHeight="160.0" prefWidth="500.0" title="Education" HBox.hgrow="ALWAYS">
               <xAxis>
                 <CategoryAxis side="BOTTOM" />
               </xAxis>
@@ -73,15 +54,145 @@
                 <NumberAxis side="LEFT" />
               </yAxis>
             </LineChart>
-            <ScrollPane hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0">
-               <content>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
+            <VBox>
+               <children>
+                  <Label text="Choose Country">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <ScrollPane hbarPolicy="NEVER">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
+                           <children>
+                              <ListView fx:id="countryList" prefHeight="200.0" prefWidth="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                        </AnchorPane>
+                     </content>
+                     <VBox.margin>
+                        <Insets right="5.0" />
+                     </VBox.margin>
+                  </ScrollPane>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+      <HBox prefHeight="100.0" prefWidth="914.0" VBox.vgrow="ALWAYS">
+         <children>
+            <VBox HBox.hgrow="ALWAYS">
+               <HBox.margin>
+                  <Insets left="5.0" />
+               </HBox.margin>
+               <children>
+                  <Region prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS" />
+                  <VBox prefHeight="200.0" prefWidth="100.0">
                      <children>
-                        <ListView fx:id="listCountries" prefHeight="200.0" prefWidth="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="NEVER">
+                           <children>
+                              <Rectangle fx:id="legend0" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0">
+                                 <HBox.margin>
+                                    <Insets bottom="3.0" right="3.0" />
+                                 </HBox.margin>
+                              </Rectangle>
+                              <Label fx:id="legLabel0" text="Label" HBox.hgrow="NEVER" />
+                           </children>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="NEVER">
+                           <children>
+                              <Rectangle fx:id="legend1" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0">
+                                 <HBox.margin>
+                                    <Insets bottom="3.0" right="3.0" />
+                                 </HBox.margin>
+                              </Rectangle>
+                              <Label fx:id="legLabel1" text="Label" />
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="NEVER">
+                           <children>
+                              <Rectangle fx:id="legend2" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0">
+                                 <HBox.margin>
+                                    <Insets bottom="3.0" right="3.0" />
+                                 </HBox.margin>
+                              </Rectangle>
+                              <Label fx:id="legLabel2" text="Label" />
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="NEVER">
+                           <children>
+                              <Rectangle fx:id="legend3" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0">
+                                 <HBox.margin>
+                                    <Insets bottom="3.0" right="3.0" />
+                                 </HBox.margin>
+                              </Rectangle>
+                              <Label fx:id="legLabel3" text="Label" />
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="NEVER">
+                           <children>
+                              <Rectangle fx:id="legend4" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0">
+                                 <HBox.margin>
+                                    <Insets bottom="3.0" right="3.0" />
+                                 </HBox.margin>
+                              </Rectangle>
+                              <Label fx:id="legLabel4" text="Label" />
+                           </children>
+                        </HBox>
+                        <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="NEVER">
+                           <children>
+                              <Rectangle fx:id="legend5" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="30.0" stroke="BLACK" strokeType="INSIDE" width="30.0">
+                                 <HBox.margin>
+                                    <Insets bottom="3.0" right="3.0" />
+                                 </HBox.margin>
+                              </Rectangle>
+                              <Label fx:id="legLabel5" text="Label" />
+                           </children>
+                        </HBox>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Quality of Life" textAlignment="CENTER">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Text>
                      </children>
-                  </AnchorPane>
-               </content>
-            </ScrollPane>
+                  </VBox>
+               </children>
+            </VBox>
+            <Canvas height="200.0" width="200.0" HBox.hgrow="ALWAYS" />
+            <Region prefHeight="217.0" prefWidth="275.0" HBox.hgrow="ALWAYS" />
+            <VBox HBox.hgrow="NEVER">
+               <children>
+                  <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+                  <HBox>
+                     <children>
+                        <Button fx:id="earlier" mnemonicParsing="false" text="-">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Button>
+                        <Slider fx:id="sliderYears" blockIncrement="1.0" majorTickUnit="2.0" max="2018.0" min="2008.0" prefHeight="38.0" prefWidth="241.0" showTickLabels="true" showTickMarks="true">
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                           <padding>
+                              <Insets right="10.0" />
+                           </padding></Slider>
+                        <Button fx:id="later" mnemonicParsing="false" text="+">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets right="3.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
          </children>
       </HBox>
   </children>
