@@ -48,10 +48,10 @@
             </VBox>
             <LineChart fx:id="factorChart" legendSide="RIGHT" prefHeight="160.0" prefWidth="500.0" title="Education" HBox.hgrow="ALWAYS">
               <xAxis>
-                <CategoryAxis side="BOTTOM" />
+                <CategoryAxis fx:id="yearsAxis" side="BOTTOM" />
               </xAxis>
               <yAxis>
-                <NumberAxis side="LEFT" />
+                <NumberAxis fx:id="values" side="LEFT" />
               </yAxis>
             </LineChart>
             <VBox>
@@ -166,12 +166,12 @@
                   <Region prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                   <HBox>
                      <children>
-                        <Button fx:id="earlier" mnemonicParsing="false" text="-">
+                        <Button fx:id="earlier" mnemonicParsing="false" onAction="#decreaseYear" text="-">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </Button>
-                        <Slider fx:id="sliderYears" blockIncrement="1.0" majorTickUnit="2.0" max="2018.0" min="2008.0" prefHeight="38.0" prefWidth="241.0" showTickLabels="true" showTickMarks="true">
+                        <Slider fx:id="sliderYears" blockIncrement="1.0" majorTickUnit="1.0" max="2018.0" min="2008.0" minorTickCount="0" prefHeight="38.0" prefWidth="241.0" showTickLabels="true" showTickMarks="true" snapToTicks="true">
                            <opaqueInsets>
                               <Insets />
                            </opaqueInsets>
@@ -181,7 +181,7 @@
                            <padding>
                               <Insets right="10.0" />
                            </padding></Slider>
-                        <Button fx:id="later" mnemonicParsing="false" text="+">
+                        <Button fx:id="later" mnemonicParsing="false" onAction="#increaseYear" text="+">
                            <font>
                               <Font size="18.0" />
                            </font>
