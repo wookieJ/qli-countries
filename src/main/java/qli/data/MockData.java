@@ -1,7 +1,6 @@
 package qli.data;
 
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -9,12 +8,12 @@ import java.util.Random;
 public class MockData {
     private HashMap<String, ArrayList<Double>> educationValues;
     private HashMap<String, ArrayList<Double>> healthValues;
-    private ArrayList<Double> valuesPoland = new ArrayList<>();
+    private ArrayList<Double> valuesPoland = new ArrayList<Double>();
     private Random random  = new Random();
 
     public MockData() {
-        educationValues = new HashMap<>();
-        healthValues = new HashMap<>();
+        educationValues = new HashMap<String, ArrayList<Double>>();
+        healthValues = new HashMap<String, ArrayList<Double>>();
     }
 
     public void fillFakeData() {

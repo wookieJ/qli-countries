@@ -69,15 +69,14 @@ public class Controller {
         selectedFactor = listFactors.getSelectionModel().getSelectedItem();
         currentYear = sliderYears.getValue();
         System.out.println(currentYear);
+        fillChart(selectedFactor,selectedCountry);
         listFactors.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
             public void handle(MouseEvent event) {
                 selectedFactor = listFactors.getSelectionModel().getSelectedItem();
                 fillChart(selectedFactor,selectedCountry);
             }
         });
         countryList.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
             public void handle(MouseEvent event) {
                 selectedCountry = countryList.getSelectionModel().getSelectedItem();
                 fillChart(selectedFactor,selectedCountry);
@@ -142,6 +141,7 @@ public class Controller {
         mockData.fillFakeData();
         ArrayList<Double> fakeValues = mockData.getEducationValues();
         XYChart.Series series = new XYChart.Series();
+        factorChart.setTitle(factorName + " dla " + countryName);
         series.setName(countryName);
         series.getData().add(new XYChart.Data("2008", fakeValues.get(0)));
         series.getData().add(new XYChart.Data("2009", fakeValues.get(1)));
