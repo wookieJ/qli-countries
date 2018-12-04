@@ -4,5 +4,5 @@ FILTERS = {
     'indic_il': ['MEI_E', 'MED_E'],
 }
 
-LENGTH = 1
+LENGTH = 2
 

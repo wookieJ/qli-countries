@@ -9,10 +9,10 @@ from script.config import common
 
 
 def run():
-    parameter = Parameter(common.EDUCATION)
+    parameter = Parameter(common.MATERIAL_CONDITIONS)
     parameter.load_sub_params()
     parameter.print_sub_params_values(print_label=True)
-    parameter.plot_feature(0, 'PL')
+    parameter.plot_feature(2, 'UK')
 
 
 if __name__ == '__main__':

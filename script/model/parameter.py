@@ -150,6 +150,13 @@ class Parameter:
         :return: matrix of parameter values
         """
         data = self.get_raw_values()
+        number_of_features = self.configuration.get_number_of_features(self.name)
+        if feature not in  range(number_of_features):
+            print(f'\nThere is no {feature} feature!')
+            return
+        if country not in data:
+            print(f'\nThere are no {country} country!')
+            return
 
         # Parsing data to 3D array
         data_3d = []
@@ -158,7 +165,6 @@ class Parameter:
             data_3d.append(data_2d)
 
         data_3d = np.array(data_3d)
-        number_of_features = self.configuration.get_number_of_features(self.name)
 
         features = np.array([])
         for size in range(number_of_features):
@@ -187,7 +193,7 @@ class Parameter:
         plt.plot(features)
         years = data['PL'].keys()
         plt.xticks(np.arange(len(years)), years, rotation=70)
-        plt.title(f'{feature} feature in Poland')
+        plt.title(f'{feature} feature in {country}')
         plt.xlabel('Year')
         plt.ylabel('Value')
         plt.show()
