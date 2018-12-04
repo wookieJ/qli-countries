@@ -3,3 +3,5 @@ FILTERS = {
     'unit': 'PC',
     'age': 'TOTAL',
 }
+
+LENGTH = 1

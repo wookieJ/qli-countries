@@ -3,3 +3,5 @@ FILTERS = {
     'age': 'TOTAL',
     'hhtyp': 'A1',
 }
+
+LENGTH = 1

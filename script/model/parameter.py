@@ -1,6 +1,17 @@
+"""
+    File name: parameter.py
+    Author: Łukasz Jędryczka
+    Date created: 24/11/2018
+    Python Version: 3.6
+
+    Parameter class and their methods. Retrieving data from API and computing data.
+"""
 from script.utils.config_loader import Configuration
 from script.utils.load import Loader
 from script.utils.data_parse import parse_json
+import matplotlib.pyplot as plt
+import numpy as np
+import warnings
 
 
 class Parameter:
@@ -9,6 +20,7 @@ class Parameter:
         self.configuration = Configuration()
         self.loader = Loader()
         self.sub_params = []
+        warnings.simplefilter(action='ignore', category=FutureWarning)
 
     def load_sub_params(self):
         """
@@ -22,7 +34,9 @@ class Parameter:
                     url = self.configuration.get_url(sub_param)
                     data = self.loader.get_json(url)
                     print(f'Database: {self.configuration.get_value(sub_param)}, url: {url}')
-                    self.sub_params.append(parse_json(data))
+                    data = parse_json(data)
+                    data['data_length'] = self.configuration.get_value(sub_param).LENGTH
+                    self.sub_params.append(data)
                 break
         print()
 
@@ -90,20 +104,100 @@ class Parameter:
                 return data
         return None
 
-    def get_values(self, year, geo):
+    def get_raw_values(self):
         """
         Get all parameter raw values
 
-        :return: list of all parameter values
+        :return: list of all sub parameter values
         """
-        values = []
+        values = dict()
+        size = 0
         for sub_param in self.sub_params:
             if 'value' in sub_param:
-                data = self.__get_index(sub_param, year, geo)
-                if data is not None:
-                    for d in data:
-                        if str(d) in sub_param['value']:
-                            values.append(sub_param['value'][str(d)])
-                        else:
-                            values.append(':')
+                for geo in sub_param['dimension']['geo']['category']['label']:
+                    for year in sub_param['dimension']['time']['category']['label']:
+                        data = self.__get_index(sub_param, year, geo)
+                        if data is not None:
+                            for d in data:
+                                if geo not in values:
+                                    values[geo] = dict()
+                                if year not in values[geo]:
+                                    values[geo][year] = []
+                                if str(d) in sub_param['value']:
+                                    values[geo][year].append(sub_param['value'][str(d)])
+                                else:
+                                    values[geo][year].append(np.NaN)
+                for geo in self.configuration.get_countries():
+                    if geo not in values:
+                        values[geo] = dict()
+                    for year in range(self.configuration.get_time_interval()[0], self.configuration.get_time_interval()[1]):
+                        year = str(year)
+                        if year not in values[geo]:
+                            values[geo][year] = []
+                        value = values[geo][year]
+                        for i in range(sub_param['data_length'] + size - len(value)):
+                            values[geo][year].append(np.NaN)
+                size += sub_param['data_length']
+
+            else:
+                raise AttributeError
         return values
+
+    def plot_feature(self, feature, country):
+        """
+        Get indicators matrix for parameter by years and geo
+
+        :return: matrix of parameter values
+        """
+        data = self.get_raw_values()
+
+        # Parsing data to 3D array
+        data_3d = []
+        for key, value in data.items():
+            data_2d = [feature for year, feature in value.items()]
+            data_3d.append(data_2d)
+
+        data_3d = np.array(data_3d)
+        number_of_features = self.configuration.get_number_of_features(self.name)
+
+        features = np.array([])
+        for size in range(number_of_features):
+            features = np.append(features, data_3d[:, :, size])
+        features = np.array(features)
+        features.flatten()
+        plt.plot(features)
+        plt.title('Educational features')
+        plt.xlabel('Number of data')
+        plt.ylabel('Value')
+        plt.show()
+
+        features = np.array([])
+        features = np.append(features, data_3d[:, :, feature])
+        features = np.array(features)
+        features.flatten()
+        plt.plot(features)
+        plt.title(f'{feature} feature in all countries')
+        plt.xlabel('Number of data')
+        plt.ylabel('Value')
+        plt.show()
+
+        pl_index = list(data.keys()).index(country)
+        start = pl_index * (self.configuration.get_time_interval()[1] - self.configuration.get_time_interval()[0])
+        features = features[start:start+14]
+        plt.plot(features)
+        years = data['PL'].keys()
+        plt.xticks(np.arange(len(years)), years, rotation=70)
+        plt.title(f'{feature} feature in Poland')
+        plt.xlabel('Year')
+        plt.ylabel('Value')
+        plt.show()
+
+    def get_indicators(self):
+        """
+        Get indicators matrix for parameter by years and geo
+
+        :return: matrix of parameter values
+        """
+        # normalization
+        # data[geo][year] = ((value - x_min) / (x_max - x_min) - 0.5) * 2
+        return 0

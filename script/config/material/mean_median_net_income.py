@@ -3,3 +3,6 @@ FILTERS = {
     'unit': 'EUR',
     'indic_il': ['MEI_E', 'MED_E'],
 }
+
+LENGTH = 1
+

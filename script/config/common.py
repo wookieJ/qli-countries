@@ -1,3 +1,11 @@
+"""
+    File name: common.py
+    Author: Łukasz Jędryczka
+    Date created: 17/11/2018
+    Python Version: 3.6
+
+    Common configurations attributes for API datasets.
+"""
 from script.config.health import life_expectancy, unmet_medical_exams, healthy_life_years
 from script.config.education import participation_rate_in_education, early_leavers_from_education, \
     teritiary_education_level
@@ -10,7 +18,10 @@ API_COMMON_CONFIG = {
 }
 
 COUNTRIES = [
-    'PL', 'UK'
+    'AL', 'AM', 'AT', 'AZ', 'BE', 'BG', 'BY', 'CH', 'CY', 'CZ', 'DE', 'DE_TOT', 'DK', 'EA18', 'EA19', 'EE', 'EEA30',
+    'EEA31', 'EFTA', 'EL', 'ES', 'EU27', 'EU28', 'FI', 'FR', 'FX', 'GE', 'HR', 'HU', 'IE', 'IS', 'IT', 'LI', 'LT',
+    'LU', 'LV', 'MD', 'ME', 'MK', 'MT', 'NL', 'NO', 'PL', 'PT', 'RO', 'RS', 'RU', 'SE', 'SI', 'SK', 'SM', 'TR', 'UA',
+    'UK', 'XK', 'EA', 'EU'
 ]
 
 SEX = {
@@ -19,10 +30,13 @@ SEX = {
     'total': 'T'
 }
 
+TIME_INTERVAL = 2004, 2018
+
 FILTERS = {
-    # 'sinceTimePeriod': 2004,
+    'sinceTimePeriod': 2004,
     'precision': 1,
-    'sex': SEX['total']
+    'sex': SEX['total'],
+    'geo': COUNTRIES
 }
 
 HEALTH = 'health'
