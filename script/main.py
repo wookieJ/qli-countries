@@ -13,7 +13,7 @@ def run():
     parameter = Parameter(param_name)
     parameter.load_sub_params()
     parameter.print_sub_params_values(print_label=True)
-    parameter.plot_feature(7, 'UK', param_name, all=False)
+    parameter.plot_feature(0, 'PL', param_name, all=False)
 
 
 if __name__ == '__main__':

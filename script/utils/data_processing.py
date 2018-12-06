@@ -30,7 +30,8 @@ def smooth_data(in_data, out_data):
 
     # if r2 > 0.9:
     linear_predict = classifier.predict(in_data.reshape(-1, 1))
-    return replace_nan_data(out_data, linear_predict), linear_predict.flatten(), r2
+    mean_fill = replace_nan_with_mean(out_data)
+    return replace_nan_data(out_data, linear_predict), linear_predict.flatten(), r2, mean_fill
 
 
 def replace_nan_data(base_data, replacing_data):
@@ -40,3 +41,16 @@ def replace_nan_data(base_data, replacing_data):
         if math.isnan(d):
             x_data[idx] = y_data[idx]
     return x_data
+
+
+def replace_nan_with_mean(data):
+    result = np.array(data)
+    mean = np.nanmean(data)
+    indexes = np.where(np.isnan(data))
+    result[indexes] = mean
+    return result
+
+
+def replace_nan_with_surrounded(data):
+    raise NotImplemented
+

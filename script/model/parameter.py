@@ -193,11 +193,11 @@ class Parameter:
         pl_index = list(data.keys()).index(country)
         start = pl_index * (self.configuration.get_time_interval()[1] - self.configuration.get_time_interval()[0])
         features = features[start:start+14]
-        s_data, regression, r2 = smooth_data(in_data_years, features)
+        s_data, regression, r2, mean_fill = smooth_data(in_data_years, features)
         plt.plot(features)
         plt.plot(regression)
         years = data['PL'].keys()
-        plt.title(f'{feature} feature in {country} - {title}, r2 = {r2}')
+        plt.title(f'Raw: {feature} feature in {country} - {title}, r2 = {format(r2, ".4f")}')
         plt.xticks(np.arange(len(years)), years, rotation=70)
         plt.xlabel('Year')
         plt.ylabel('Value')
@@ -207,14 +207,20 @@ class Parameter:
         plt.xticks(np.arange(len(years)), years, rotation=70)
         plt.xlabel('Year')
         plt.ylabel('Value')
-        plt.title(f'{feature} feature in {country} - {title}')
-        plt.plot(s_data)
+        plt.title(f'Linear: {feature} feature in {country} - {title}')
+        plt.show()
+
+        plt.xticks(np.arange(len(years)), years, rotation=70)
+        plt.xlabel('Year')
+        plt.ylabel('Value')
+        plt.title(f'Mean: {feature} feature in {country} - {title}')
+        plt.plot(mean_fill)
         plt.show()
 
         print(f'\nfeatures: {features}')
         print(f'regression: {regression}')
         print(f'smoothed data: {s_data}')
-
+        print(f'mean_fill: {mean_fill}')
 
     def get_indicators(self):
         """
