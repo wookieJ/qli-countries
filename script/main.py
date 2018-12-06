@@ -9,10 +9,11 @@ from script.config import common
 
 
 def run():
-    parameter = Parameter(common.MATERIAL_CONDITIONS)
+    param_name = common.HEALTH
+    parameter = Parameter(param_name)
     parameter.load_sub_params()
     parameter.print_sub_params_values(print_label=True)
-    parameter.plot_feature(2, 'UK')
+    parameter.plot_feature(7, 'UK', param_name, all=False)
 
 
 if __name__ == '__main__':

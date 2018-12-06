@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import warnings
 
+from script.utils.data_processing import smooth_data
 
 class Parameter:
     def __init__(self, name):
@@ -143,7 +144,7 @@ class Parameter:
                 raise AttributeError
         return values
 
-    def plot_feature(self, feature, country):
+    def plot_feature(self, feature, country, title, all=True):
         """
         Get indicators matrix for parameter by years and geo
 
@@ -155,10 +156,9 @@ class Parameter:
             print(f'\nThere is no {feature} feature!')
             return
         if country not in data:
-            print(f'\nThere are no {country} country!')
+            print(f'\nThere is no {country} country!')
             return
 
-        # Parsing data to 3D array
         data_3d = []
         for key, value in data.items():
             data_2d = [feature for year, feature in value.items()]
@@ -171,32 +171,50 @@ class Parameter:
             features = np.append(features, data_3d[:, :, size])
         features = np.array(features)
         features.flatten()
-        plt.plot(features)
-        plt.title('Educational features')
-        plt.xlabel('Number of data')
-        plt.ylabel('Value')
-        plt.show()
+
+        if all:
+            plt.plot(features)
+            plt.title(f'{title} features')
+            plt.xlabel('Number of data')
+            plt.ylabel('Value')
+            plt.show()
 
         features = np.array([])
         features = np.append(features, data_3d[:, :, feature])
-        features = np.array(features)
         features.flatten()
-        plt.plot(features)
-        plt.title(f'{feature} feature in all countries')
-        plt.xlabel('Number of data')
-        plt.ylabel('Value')
-        plt.show()
+        if all:
+            plt.plot(features)
+            plt.title(f'{feature} feature in all countries')
+            plt.xlabel('Number of data')
+            plt.ylabel('Value')
+            plt.show()
 
+        in_data_years = np.array([i for i in range(2004, 2018)])
         pl_index = list(data.keys()).index(country)
         start = pl_index * (self.configuration.get_time_interval()[1] - self.configuration.get_time_interval()[0])
         features = features[start:start+14]
+        s_data, regression, r2 = smooth_data(in_data_years, features)
         plt.plot(features)
+        plt.plot(regression)
         years = data['PL'].keys()
+        plt.title(f'{feature} feature in {country} - {title}, r2 = {r2}')
         plt.xticks(np.arange(len(years)), years, rotation=70)
-        plt.title(f'{feature} feature in {country}')
         plt.xlabel('Year')
         plt.ylabel('Value')
         plt.show()
+
+        plt.plot(s_data)
+        plt.xticks(np.arange(len(years)), years, rotation=70)
+        plt.xlabel('Year')
+        plt.ylabel('Value')
+        plt.title(f'{feature} feature in {country} - {title}')
+        plt.plot(s_data)
+        plt.show()
+
+        print(f'\nfeatures: {features}')
+        print(f'regression: {regression}')
+        print(f'smoothed data: {s_data}')
+
 
     def get_indicators(self):
         """
