@@ -5,4 +5,4 @@ FILTERS = {
 
 LENGTH = 1
 
-INVERT = []
+INVERT = [0]
