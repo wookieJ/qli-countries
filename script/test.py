@@ -4,13 +4,13 @@ import json
 
 def run():
     ind = dict()
-    for qol in ['MAT_LIVING', 'HEALTH', 'EDUCATION', 'ECON_SAFETY',
-                'LEISURE', 'GOVERN', 'LIVING_ENV', 'LIFE_EXP', 'EMPLOY']:
-        ind[qol] = dict()
-        for country in ['PL', 'DE', 'UK']:
-            ind[qol][country] = dict()
-            for year in ['2010', '2011', '2012', '2013', '2014', '2015']:
-                ind[qol][country][year] = rd.uniform(-1.0, 1.0)
+    for country in ['PL', 'DE', 'UK', 'EU_AVG']:
+        ind[country] = dict()
+        for qol in ['MAT_LIVING', 'HEALTH', 'EDUCATION', 'ECON_SAFETY',
+                    'LEISURE', 'GOVERN', 'LIVING_ENV', 'LIFE_EXP', 'EMPLOY']:
+            ind[country][qol] = [rd.uniform(0, 1.0) for i in range(2004, 2018)]
+            if country is 'EU_AVG':
+                ind[country][qol] = [rd.uniform(0, 1.0)] * (2018 - 2004)
     result = dict()
     result['qualities'] = ind
     result = json.dumps(result)
