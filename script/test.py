@@ -1,6 +1,66 @@
 import random as rd
 import json
 
+COUNTRIES = {
+    'AL': 'Albania',
+    'AM': 'Armenia',
+    'AT': 'Austria',
+    'AZ': 'Azerbaijan',
+    'BE': 'Belgium',
+    'BG': 'Bulgaria',
+    'BY': 'Belarus',
+    'CH': 'Switzerland',
+    'CY': 'Cyprus',
+    'CZ': 'Czechia',
+    'DE': 'Germany (until 1990 former territory of the FRG)',
+    'DE_TOT': 'Germany including former GDR',
+    'DK': 'Denmark',
+    'EA18': 'Euro area (18 countries)',
+    'EA19': 'Euro area (19 countries)',
+    'EE': 'Estonia',
+    'EEA30': 'European Economic Area (EU27 -  before the accession of Croatia, plus IS, LI, NO)',
+    'EEA31': 'European Economic Area (EU28  - current composition, plus IS, LI, NO)',
+    'EFTA': 'European Free Trade Association',
+    'EL': 'Greece',
+    'ES': 'Spain',
+    'EU27': 'European Union (before the accession of Croatia)',
+    'EU28': 'European Union (current composition)',
+    'FI': 'Finland',
+    'FR': 'France',
+    'FX': 'France (metropolitan)',
+    'GE': 'Georgia',
+    'HR': 'Croatia',
+    'HU': 'Hungary',
+    'IE': 'Ireland',
+    'IS': 'Iceland',
+    'IT': 'Italy',
+    'LI': 'Liechtenstein',
+    'LT': 'Lithuania',
+    'LU': 'Luxembourg',
+    'LV': 'Latvia',
+    'MD': 'Moldova',
+    'ME': 'Montenegro',
+    'MK': 'Former Yugoslav Republic of Macedonia, the',
+    'MT': 'Malta',
+    'NL': 'Netherlands',
+    'NO': 'Norway',
+    'PL': 'Poland',
+    'PT': 'Portugal',
+    'RO': 'Romania',
+    'RS': 'Serbia',
+    'RU': 'Russia',
+    'SE': 'Sweden',
+    'SI': 'Slovenia',
+    'SK': 'Slovakia',
+    'SM': 'San Marino',
+    'TR': 'Turkey',
+    'UA': 'Ukraine',
+    'UK': 'United Kingdom',
+    'XK': 'Kosovo (under United Nations Security Council Resolution 1244/99)',
+    'EA': 'Euro area',
+    'EU': 'European Union'
+}
+
 
 def run():
     ind = dict()
@@ -17,6 +77,7 @@ def run():
         ind[country]['qol'] = rd.uniform(0, 1.0)
     result = dict()
     result['qualities'] = ind
+    result['countries'] = COUNTRIES
     result = json.dumps(result)
     print(result)
 
