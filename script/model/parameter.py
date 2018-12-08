@@ -239,14 +239,7 @@ class Parameter:
         plt.plot(moving_w_average)
         plt.show()
 
-        # print(f'\nfeatures: {features}')
-        # print(f'regression: {regression}')
-        # print(f'smoothed data: {s_data}')
-        # print(f'mean_fill: {mean_fill}')
-        # print(f'moving_avg: {moving_average}')
-        # print(f'moving_w_avg: {moving_w_average}')
-
-    def get_indicators(self):
+    def get_indicators(self, normalize=True):
         """
         Get indicators matrix for parameter by years and geo
 
@@ -264,6 +257,21 @@ class Parameter:
 
         number_of_features = self.configuration.get_number_of_features(self.name)
         time_interval = self.configuration.get_time_interval()[1] - self.configuration.get_time_interval()[0]
+
+        features_min_maxes = dict()
+        if normalize:
+            for feature_idx in range(number_of_features):
+                features = np.array(data_3d[:, :, feature_idx])
+                features_min_maxes[feature_idx] = [9999, 0]
+                for country_idx, country_feature in enumerate(features):
+                    country_feature = smooth_data(country_feature)
+                    min_val = country_feature.min()
+                    max_val = country_feature.max()
+                    if min_val < features_min_maxes[feature_idx][0]:
+                        features_min_maxes[feature_idx][0] = min_val
+                    if max_val > features_min_maxes[feature_idx][1]:
+                        features_min_maxes[feature_idx][1] = max_val
+
         for feature_idx in range(number_of_features):
             features = np.array(data_3d[:, :, feature_idx])
             for country_idx, country_feature in enumerate(features):
@@ -271,5 +279,9 @@ class Parameter:
                 for year_idx in range(time_interval):
                     key = list(data.keys())[country_idx]
                     index = str(self.configuration.get_time_interval()[0] + year_idx)
-                    data[key][index][feature_idx] = country_feature[feature_idx]
+                    norm_value = country_feature[feature_idx]
+                    if normalize:
+                        norm_value = country_feature[feature_idx] - features_min_maxes[feature_idx][0]
+                        norm_value /= (features_min_maxes[feature_idx][1] - features_min_maxes[feature_idx][0])
+                    data[key][index][feature_idx] = norm_value
         return data
