@@ -6,3 +6,5 @@ FILTERS = {
 
 LENGTH = 2
 
+INVERT = []
+

@@ -4,3 +4,5 @@ FILTERS = {
 }
 
 LENGTH = 1
+
+INVERT = []

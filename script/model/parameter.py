@@ -10,6 +10,7 @@ from script.utils.config_loader import Configuration
 from script.utils.load import Loader
 from script.utils.data_parse import parse_json
 from script.utils.data_processing import smooth_data
+from script.utils.data_processing import linear_regression
 import matplotlib.pyplot as plt
 import numpy as np
 import warnings
@@ -127,13 +128,19 @@ class Parameter:
                     for year in sub_param['dimension']['time']['category']['label']:
                         data = self.__get_index(sub_param, year, geo)
                         if data is not None:
+                            cnt = 0
                             for d in data:
                                 if geo not in values:
                                     values[geo] = dict()
                                 if year not in values[geo]:
                                     values[geo][year] = []
                                 if str(d) in sub_param['value']:
-                                    values[geo][year].append(sub_param['value'][str(d)])
+                                    app_value = sub_param['value'][str(d)]
+                                    invert = self.configuration.get_value(sub_param['extension']['datasetId']).INVERT
+                                    if invert and cnt % 10 in invert:
+                                        app_value *= -1
+                                    values[geo][year].append(app_value)
+                                    cnt += 1
                                 else:
                                     values[geo][year].append(np.NaN)
                 t1, t2 = self.configuration.get_time_interval()[0], self.configuration.get_time_interval()[1]
@@ -239,7 +246,7 @@ class Parameter:
         plt.plot(moving_w_average)
         plt.show()
 
-    def get_indicators(self, normalize=True):
+    def get_indicators(self, normalize=True, linearize=False):
         """
         Get indicators matrix for parameter by years and geo
 
@@ -293,5 +300,7 @@ class Parameter:
             indicators[geo][self.name] = []
             for year in data[geo]:
                 indicators[geo][self.name].append(data[geo][year])
+            if linearize:
+                indicators[geo][self.name] = linear_regression(indicators[geo][self.name])
 
         return indicators

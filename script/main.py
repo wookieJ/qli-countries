@@ -15,12 +15,11 @@ def run():
     param_name = common.HEALTH
     parameter = Parameter(param_name)
     parameter.load_sub_params()
-    parameter.print_sub_params_values(print_label=True)
-    parameter.plot_feature(0, 'PL', param_name, print_all=False)
-    indicators = parameter.get_indicators(normalize=True)
+    # parameter.print_sub_params_values(print_label=True)
+    # parameter.plot_feature(3, 'PL', param_name, print_all=False)
+    indicators = parameter.get_indicators(normalize=True, linearize=False)
 
     country = 'PL'
-    print(indicators[country][param_name])
     linear_reg = linear_regression(indicators[country][param_name])
 
     plt.title(f'{param_name} in {country}')
