@@ -256,8 +256,6 @@ class Parameter:
             raise AttributeError('Not loaded data, run load_sub_params() method')
 
         number_of_features = self.configuration.get_number_of_features(self.name)
-        time_interval = self.configuration.get_time_interval()[1] - self.configuration.get_time_interval()[0]
-
         features_min_maxes = dict()
         if normalize:
             for feature_idx in range(number_of_features):
@@ -276,12 +274,24 @@ class Parameter:
             features = np.array(data_3d[:, :, feature_idx])
             for country_idx, country_feature in enumerate(features):
                 country_feature = smooth_data(country_feature)
-                for year_idx in range(time_interval):
-                    key = list(data.keys())[country_idx]
-                    index = str(self.configuration.get_time_interval()[0] + year_idx)
-                    norm_value = country_feature[feature_idx]
+                for year_feature_idx, year_feature in enumerate(country_feature):
+                    geo_idx = list(data.keys())[country_idx]
+                    year_idx = str(self.configuration.get_time_interval()[0] + year_feature_idx)
+                    norm_value = year_feature
                     if normalize:
-                        norm_value = country_feature[feature_idx] - features_min_maxes[feature_idx][0]
+                        norm_value = year_feature - features_min_maxes[feature_idx][0]
                         norm_value /= (features_min_maxes[feature_idx][1] - features_min_maxes[feature_idx][0])
-                    data[key][index][feature_idx] = norm_value
-        return data
+                    data[geo_idx][year_idx][feature_idx] = norm_value
+
+        for geo in data:
+            for year in data[geo]:
+                data[geo][year] = sum(data[geo][year])
+
+        indicators = dict()
+        for geo in data:
+            indicators[geo] = dict()
+            indicators[geo][self.name] = []
+            for year in data[geo]:
+                indicators[geo][self.name].append(data[geo][year])
+
+        return indicators

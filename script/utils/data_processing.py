@@ -11,6 +11,7 @@ warnings.filterwarnings(action="ignore", module="sklearn", message="^internal ge
 def smooth_data(data, return_all=False):
     in_data = np.array([i for i in range(len(data))])
     in_data = in_data.reshape(-1, 1)
+    data = np.array(data)
     out_data = data[np.logical_not(np.isnan(data))]
     out_data = out_data.reshape(-1, 1)
     if not len(out_data):
@@ -29,6 +30,21 @@ def smooth_data(data, return_all=False):
     if return_all:
         return linear_replacing, linear_predict.flatten(), r2, mean_fill, moving_average, moving_w_average
     return linear_replacing
+
+
+def linear_regression(data):
+    in_data = np.array([i for i in range(len(data))])
+    in_data = in_data.reshape(-1, 1)
+    data = np.array(data)
+    out_data = data[np.logical_not(np.isnan(data))]
+    out_data = out_data.reshape(-1, 1)
+    if not len(out_data):
+        return np.array([0] * len(data))
+    in_c_data = in_data[np.logical_not(np.isnan(data))]
+    in_c_data = in_c_data.reshape(-1, 1)
+    classifier = LinearRegression()
+    classifier.fit(in_c_data, out_data)
+    return classifier.predict(in_data)
 
 
 def replace_nan_data(base_data, replacing_data):
