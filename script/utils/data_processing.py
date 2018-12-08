@@ -8,30 +8,27 @@ import warnings
 warnings.filterwarnings(action="ignore", module="sklearn", message="^internal gelsd")
 
 
-def smooth_data(in_data, out_data):
-    if len(in_data) is not len(out_data):
-        raise AttributeError(f'X ({len(input)}) and Y ({len(out_data)}) data lengths must be equal')
-
-    y_data = np.array(out_data)
+def smooth_data(data, return_all=False):
+    in_data = np.array([i for i in range(len(data))])
+    in_data = in_data.reshape(-1, 1)
+    out_data = data[np.logical_not(np.isnan(data))]
+    out_data = out_data.reshape(-1, 1)
+    if not len(out_data):
+        return np.array([0] * len(data))
+    in_c_data = in_data[np.logical_not(np.isnan(data))]
+    in_c_data = in_c_data.reshape(-1, 1)
     classifier = LinearRegression()
-    indexes = []
-    for idx, d in enumerate(y_data):
-        if math.isnan(d):
-            indexes.append(idx)
-    x_data = np.delete(in_data, indexes)
-    x_data = x_data.reshape(-1, 1)
-    y_data = [d for d in y_data if not math.isnan(d)]
-    y_data = np.asarray(y_data)
-    y_data = y_data.reshape(-1, 1)
-    classifier.fit(x_data, y_data)
-
-    predict = classifier.predict(x_data)
-    r2 = r2_score(y_data, predict)
-
-    # if r2 > 0.9:
-    linear_predict = classifier.predict(in_data.reshape(-1, 1))
-    mean_fill = replace_nan_with_mean(out_data)
-    return replace_nan_data(out_data, linear_predict), linear_predict.flatten(), r2, mean_fill
+    classifier.fit(in_c_data, out_data)
+    predict = classifier.predict(in_c_data)
+    r2 = r2_score(out_data, predict)
+    linear_predict = classifier.predict(in_data)
+    mean_fill = replace_nan_with_mean(data)
+    moving_average = replace_nan_with_moving_average(data)
+    moving_w_average = replace_nan_with_moving_average(data, weights=True)
+    linear_replacing = replace_nan_data(data, linear_predict)
+    if return_all:
+        return linear_replacing, linear_predict.flatten(), r2, mean_fill, moving_average, moving_w_average
+    return linear_replacing
 
 
 def replace_nan_data(base_data, replacing_data):
@@ -51,6 +48,22 @@ def replace_nan_with_mean(data):
     return result
 
 
-def replace_nan_with_surrounded(data):
-    raise NotImplemented
-
+def replace_nan_with_moving_average(data, weights=False):
+    result = np.array(data)
+    if math.isnan(result[0]):
+        result[0] = np.nanmean(result)
+    for idx, d in enumerate(result):
+        if math.isnan(d):
+            avg = 0
+            w = 0
+            for i in range(idx):
+                ms = result[i]
+                if weights:
+                    ms *= (i + 1)
+                    w += (i + 1)
+                avg += ms
+            if weights and w is not 0:
+                result[idx] = avg / w
+            elif not weights and idx is not 0:
+                result[idx] = avg / idx
+    return result

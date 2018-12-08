@@ -9,11 +9,12 @@
 from script.utils.config_loader import Configuration
 from script.utils.load import Loader
 from script.utils.data_parse import parse_json
+from script.utils.data_processing import smooth_data
 import matplotlib.pyplot as plt
 import numpy as np
 import warnings
+import copy
 
-from script.utils.data_processing import smooth_data
 
 class Parameter:
     def __init__(self, name):
@@ -21,6 +22,8 @@ class Parameter:
         self.configuration = Configuration()
         self.loader = Loader()
         self.sub_params = []
+        self.raw_data = None
+        self.structured_data = None
         warnings.simplefilter(action='ignore', category=FutureWarning)
 
     def load_sub_params(self):
@@ -34,12 +37,17 @@ class Parameter:
                 for sub_param in self.configuration.get_subparams_list(self.name):
                     url = self.configuration.get_url(sub_param)
                     data = self.loader.get_json(url)
-                    print(f'Database: {self.configuration.get_value(sub_param)}, url: {url}')
                     data = parse_json(data)
                     data['data_length'] = self.configuration.get_value(sub_param).LENGTH
                     self.sub_params.append(data)
                 break
-        print()
+        self.structured_data = self.get_structured_data()
+        data_3d = []
+        for key, value in self.structured_data.items():
+            data_2d = [feature for year, feature in value.items()]
+            data_3d.append(data_2d)
+        data_3d = np.array(data_3d)
+        self.raw_data = data_3d
 
     def print_sub_params_values(self, print_label=False):
         """
@@ -105,7 +113,7 @@ class Parameter:
                 return data
         return None
 
-    def get_raw_values(self):
+    def get_structured_data(self):
         """
         Get all parameter raw values
 
@@ -128,10 +136,11 @@ class Parameter:
                                     values[geo][year].append(sub_param['value'][str(d)])
                                 else:
                                     values[geo][year].append(np.NaN)
+                t1, t2 = self.configuration.get_time_interval()[0], self.configuration.get_time_interval()[1]
                 for geo in self.configuration.get_countries():
                     if geo not in values:
                         values[geo] = dict()
-                    for year in range(self.configuration.get_time_interval()[0], self.configuration.get_time_interval()[1]):
+                    for year in range(t1, t2):
                         year = str(year)
                         if year not in values[geo]:
                             values[geo][year] = []
@@ -139,40 +148,41 @@ class Parameter:
                         for i in range(sub_param['data_length'] + size - len(value)):
                             values[geo][year].append(np.NaN)
                 size += sub_param['data_length']
-
             else:
                 raise AttributeError
         return values
 
-    def plot_feature(self, feature, country, title, all=True):
+    def plot_feature(self, feature, country, title, print_all=True):
         """
         Get indicators matrix for parameter by years and geo
 
         :return: matrix of parameter values
         """
-        data = self.get_raw_values()
+        if self.structured_data is not None:
+            data = dict(self.structured_data)
+        else:
+            raise AttributeError('Not loaded data, run load_sub_params() method')
+
         number_of_features = self.configuration.get_number_of_features(self.name)
-        if feature not in  range(number_of_features):
+
+        if feature not in range(number_of_features):
             print(f'\nThere is no {feature} feature!')
             return
         if country not in data:
             print(f'\nThere is no {country} country!')
             return
 
-        data_3d = []
-        for key, value in data.items():
-            data_2d = [feature for year, feature in value.items()]
-            data_3d.append(data_2d)
-
-        data_3d = np.array(data_3d)
+        if self.raw_data is not None:
+            data_3d = np.array(self.raw_data)
+        else:
+            raise AttributeError('Not loaded data, run load_sub_params() method')
 
         features = np.array([])
         for size in range(number_of_features):
             features = np.append(features, data_3d[:, :, size])
         features = np.array(features)
-        features.flatten()
 
-        if all:
+        if print_all:
             plt.plot(features)
             plt.title(f'{title} features')
             plt.xlabel('Number of data')
@@ -181,19 +191,17 @@ class Parameter:
 
         features = np.array([])
         features = np.append(features, data_3d[:, :, feature])
-        features.flatten()
-        if all:
+        if print_all:
             plt.plot(features)
             plt.title(f'{feature} feature in all countries')
             plt.xlabel('Number of data')
             plt.ylabel('Value')
             plt.show()
 
-        in_data_years = np.array([i for i in range(2004, 2018)])
         pl_index = list(data.keys()).index(country)
         start = pl_index * (self.configuration.get_time_interval()[1] - self.configuration.get_time_interval()[0])
         features = features[start:start+14]
-        s_data, regression, r2, mean_fill = smooth_data(in_data_years, features)
+        s_data, regression, r2, mean_fill, moving_average, moving_w_average = smooth_data(features, return_all=True)
         plt.plot(features)
         plt.plot(regression)
         years = data['PL'].keys()
@@ -217,10 +225,26 @@ class Parameter:
         plt.plot(mean_fill)
         plt.show()
 
-        print(f'\nfeatures: {features}')
-        print(f'regression: {regression}')
-        print(f'smoothed data: {s_data}')
-        print(f'mean_fill: {mean_fill}')
+        plt.xticks(np.arange(len(years)), years, rotation=70)
+        plt.xlabel('Year')
+        plt.ylabel('Value')
+        plt.title(f'Moving avg: {feature} feature in {country} - {title}')
+        plt.plot(moving_average)
+        plt.show()
+
+        plt.xticks(np.arange(len(years)), years, rotation=70)
+        plt.xlabel('Year')
+        plt.ylabel('Value')
+        plt.title(f'Moving W avg: {feature} feature in {country} - {title}')
+        plt.plot(moving_w_average)
+        plt.show()
+
+        # print(f'\nfeatures: {features}')
+        # print(f'regression: {regression}')
+        # print(f'smoothed data: {s_data}')
+        # print(f'mean_fill: {mean_fill}')
+        # print(f'moving_avg: {moving_average}')
+        # print(f'moving_w_avg: {moving_w_average}')
 
     def get_indicators(self):
         """
@@ -228,6 +252,24 @@ class Parameter:
 
         :return: matrix of parameter values
         """
-        # normalization
-        # data[geo][year] = ((value - x_min) / (x_max - x_min) - 0.5) * 2
-        return 0
+        if self.structured_data is not None:
+            data = copy.deepcopy(self.structured_data)
+        else:
+            raise AttributeError('Not loaded data, run load_sub_params() method')
+
+        if self.raw_data is not None:
+            data_3d = np.array(self.raw_data)
+        else:
+            raise AttributeError('Not loaded data, run load_sub_params() method')
+
+        number_of_features = self.configuration.get_number_of_features(self.name)
+        time_interval = self.configuration.get_time_interval()[1] - self.configuration.get_time_interval()[0]
+        for feature_idx in range(number_of_features):
+            features = np.array(data_3d[:, :, feature_idx])
+            for country_idx, country_feature in enumerate(features):
+                country_feature = smooth_data(country_feature)
+                for year_idx in range(time_interval):
+                    key = list(data.keys())[country_idx]
+                    index = str(self.configuration.get_time_interval()[0] + year_idx)
+                    data[key][index][feature_idx] = country_feature[feature_idx]
+        return data
