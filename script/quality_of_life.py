@@ -20,6 +20,7 @@ def run():
     """
     country = 'PL'
     countries = dict()
+    years = [i for i in range(2004, 2018)]
 
     for param_name in common.QOL_PARAMS:
         parameter = Parameter(param_name)
@@ -32,16 +33,19 @@ def run():
                 countries[geo] = p['dimension']['geo']['category']['label'][geo]
 
         linear_reg = linear_regression(indicators[country][param_name])
-        years = [i for i in range(2004, 2018)]
-        plt.plot(indicators['PL'][param_name])
-        parameter.plot_feature(linear_reg, years, f'{param_name} in {country}')
-        merge_indicators(indicators)
+        # plt.plot(indicators['PL'][param_name])
+        # parameter.plot_feature(linear_reg, years, f'{param_name} in {country}')
+        __merge_indicators(indicators)
+
+    __add_qol_indicators()
+    for country in common.COUNTRIES:
+        Parameter.plot_feature(qualities[country]['qol'], years, f'Quality of life in {common.COUNTRIES[country]}')
 
     print(countries)
-    return_to_stdout()
+    __return_to_stdout()
 
 
-def merge_indicators(indicators):
+def __merge_indicators(indicators):
     """
     Merging indicators from parameter into one response
     :param indicators: indicators from one parameter
@@ -55,7 +59,7 @@ def merge_indicators(indicators):
                 qualities[geo][qol] = indicators[geo][qol]
 
 
-def return_to_stdout():
+def __return_to_stdout():
     """
     Printing final response in json format to stdout
     :return:
@@ -65,6 +69,22 @@ def return_to_stdout():
     result['countries'] = common.COUNTRIES
     result = json.dumps(result)
     print(result)
+
+
+def __add_qol_indicators():
+    """
+    Add to ind_np final quality of life indicator of each country
+    :return: quality of life indicators
+    """
+    time_interval = common.TIME_INTERVAL[1] - common.TIME_INTERVAL[0]
+    for geo in qualities:
+        qualities[geo]['qol'] = []
+        for year in range(time_interval):
+            indicator = 0
+            for qol in qualities[geo]:
+                if qol is not 'qol':
+                    indicator += qualities[geo][qol][year]
+            qualities[geo]['qol'].append(indicator)
 
 
 if __name__ == '__main__':

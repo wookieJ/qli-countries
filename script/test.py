@@ -74,7 +74,7 @@ def run():
             ind[country][qol] = [rd.uniform(0, 1.0) for i in range(2004, 2018)]
             if country is 'EU_AVG':
                 ind[country][qol] = [rd.uniform(0, 1.0)] * (2018 - 2004)
-        ind[country]['qol'] = rd.uniform(0, 1.0)
+        ind[country]['qol'] = [rd.uniform(0, 1.0) for i in range(2004, 2018)]
     result = dict()
     result['qualities'] = ind
     result['countries'] = COUNTRIES

@@ -328,11 +328,3 @@ class Parameter:
                     features_min_maxes[feature_idx][1] = max_val
 
         return features_min_maxes
-
-    def __add_qol_indicators(self):
-        """
-        Add to data final quality of life indicator of each country
-        :return: quality of life indicators
-        """
-        raise NotImplemented
-
