@@ -159,7 +159,7 @@ class Parameter:
                 raise AttributeError
         return values
 
-    def plot_feature(self, feature, country, title, print_all=True):
+    def plot_features(self, feature, country, param_name, print_all=True):
         """
         Get indicators matrix for parameter by years and geo
 
@@ -189,61 +189,51 @@ class Parameter:
             features = np.append(features, data_3d[:, :, size])
         features = np.array(features)
 
+        years = data['PL'].keys()
         if print_all:
-            plt.plot(features)
-            plt.title(f'{title} features')
-            plt.xlabel('Number of data')
-            plt.ylabel('Value')
-            plt.show()
-
+            title = f'{param_name} features'
+            self.plot_feature(features, years, title)
         features = np.array([])
         features = np.append(features, data_3d[:, :, feature])
         if print_all:
-            plt.plot(features)
-            plt.title(f'{feature} feature in all countries')
-            plt.xlabel('Number of data')
-            plt.ylabel('Value')
-            plt.show()
+            title = f'{feature} feature in all countries'
+            self.plot_feature(features, years, title)
 
         pl_index = list(data.keys()).index(country)
         start = pl_index * (self.configuration.get_time_interval()[1] - self.configuration.get_time_interval()[0])
         features = features[start:start+14]
         s_data, regression, r2, mean_fill, moving_average, moving_w_average = smooth_data(features, return_all=True)
+
+        title = f'Raw: {feature} feature in {country} - {param_name}, r2 = {format(r2, ".4f")}'
         plt.plot(features)
-        plt.plot(regression)
-        years = data['PL'].keys()
-        plt.title(f'Raw: {feature} feature in {country} - {title}, r2 = {format(r2, ".4f")}')
-        plt.xticks(np.arange(len(years)), years, rotation=70)
-        plt.xlabel('Year')
-        plt.ylabel('Value')
-        plt.show()
+        self.plot_feature(regression, years, title)
 
-        plt.plot(s_data)
-        plt.xticks(np.arange(len(years)), years, rotation=70)
-        plt.xlabel('Year')
-        plt.ylabel('Value')
-        plt.title(f'Linear: {feature} feature in {country} - {title}')
-        plt.show()
+        title = f'Linear: {feature} feature in {country} - {param_name}'
+        self.plot_feature(s_data, years, title)
 
-        plt.xticks(np.arange(len(years)), years, rotation=70)
-        plt.xlabel('Year')
-        plt.ylabel('Value')
-        plt.title(f'Mean: {feature} feature in {country} - {title}')
-        plt.plot(mean_fill)
-        plt.show()
+        title = f'Mean: {feature} feature in {country} - {param_name}'
+        self.plot_feature(mean_fill, years, title)
 
-        plt.xticks(np.arange(len(years)), years, rotation=70)
-        plt.xlabel('Year')
-        plt.ylabel('Value')
-        plt.title(f'Moving avg: {feature} feature in {country} - {title}')
-        plt.plot(moving_average)
-        plt.show()
+        title = f'Moving avg: {feature} feature in {country} - {param_name}'
+        self.plot_feature(moving_average, years, title)
 
+        title = f'Moving W avg: {feature} feature in {country} - {param_name}'
+        self.plot_feature(moving_w_average, years, title)
+
+    @staticmethod
+    def plot_feature(data, years, title):
+        """
+        Plotting feature
+        :param data: data to plot
+        :param years: x-axis values
+        :param title: title of plot
+        :return:
+        """
         plt.xticks(np.arange(len(years)), years, rotation=70)
         plt.xlabel('Year')
         plt.ylabel('Value')
-        plt.title(f'Moving W avg: {feature} feature in {country} - {title}')
-        plt.plot(moving_w_average)
+        plt.title(title)
+        plt.plot(data)
         plt.show()
 
     def get_indicators(self, normalize=True, linearize=False):
@@ -262,21 +252,47 @@ class Parameter:
         else:
             raise AttributeError('Not loaded data, run load_sub_params() method')
 
-        number_of_features = self.configuration.get_number_of_features(self.name)
-        features_min_maxes = dict()
+        features_min_maxes = None
         if normalize:
-            for feature_idx in range(number_of_features):
-                features = np.array(data_3d[:, :, feature_idx])
-                features_min_maxes[feature_idx] = [9999, 0]
-                for country_idx, country_feature in enumerate(features):
-                    country_feature = smooth_data(country_feature)
-                    min_val = country_feature.min()
-                    max_val = country_feature.max()
-                    if min_val < features_min_maxes[feature_idx][0]:
-                        features_min_maxes[feature_idx][0] = min_val
-                    if max_val > features_min_maxes[feature_idx][1]:
-                        features_min_maxes[feature_idx][1] = max_val
+            features_min_maxes = self.__get_min_max_values()
 
+        data = self.__to_dict_conversion(data, data_3d, features_min_maxes, normalize)
+
+        for geo in data:
+            for year in data[geo]:
+                data[geo][year] = sum(data[geo][year])
+
+        indicators = self.__structure_conversion(data, linearize)
+
+        return indicators
+
+    def __structure_conversion(self, data, linearize):
+        """
+        Final structure that GUI application understand
+        :param data: input structure
+        :param linearize: True if wants to linearize data
+        :return: converted structure
+        """
+        indicators = dict()
+        for geo in data:
+            indicators[geo] = dict()
+            indicators[geo][self.name] = []
+            for year in data[geo]:
+                indicators[geo][self.name].append(data[geo][year])
+            if linearize:
+                indicators[geo][self.name] = linear_regression(indicators[geo][self.name])
+        return indicators
+
+    def __to_dict_conversion(self, data, data_3d, features_min_maxes, normalize):
+        """
+        Converting matrix data to dictionary structure data
+        :param data: basic raw structured data
+        :param data_3d: matrix data
+        :param features_min_maxes: min max values of data - in normalization purpose
+        :param normalize: True if wants to normalize data
+        :return: dictionary structure data
+        """
+        number_of_features = self.configuration.get_number_of_features(self.name)
         for feature_idx in range(number_of_features):
             features = np.array(data_3d[:, :, feature_idx])
             for country_idx, country_feature in enumerate(features):
@@ -289,18 +305,34 @@ class Parameter:
                         norm_value = year_feature - features_min_maxes[feature_idx][0]
                         norm_value /= (features_min_maxes[feature_idx][1] - features_min_maxes[feature_idx][0])
                     data[geo_idx][year_idx][feature_idx] = norm_value
+        return data
 
-        for geo in data:
-            for year in data[geo]:
-                data[geo][year] = sum(data[geo][year])
+    def __get_min_max_values(self):
+        """
+        Getting min max values for each features
+        :return: min max values
+        """
+        data_3d = np.array(self.raw_data)
+        features_min_maxes = dict()
+        number_of_features = self.configuration.get_number_of_features(self.name)
+        for feature_idx in range(number_of_features):
+            features = np.array(data_3d[:, :, feature_idx])
+            features_min_maxes[feature_idx] = [9999, 0]
+            for country_idx, country_feature in enumerate(features):
+                country_feature = smooth_data(country_feature)
+                min_val = country_feature.min()
+                max_val = country_feature.max()
+                if min_val < features_min_maxes[feature_idx][0]:
+                    features_min_maxes[feature_idx][0] = min_val
+                if max_val > features_min_maxes[feature_idx][1]:
+                    features_min_maxes[feature_idx][1] = max_val
 
-        indicators = dict()
-        for geo in data:
-            indicators[geo] = dict()
-            indicators[geo][self.name] = []
-            for year in data[geo]:
-                indicators[geo][self.name].append(data[geo][year])
-            if linearize:
-                indicators[geo][self.name] = linear_regression(indicators[geo][self.name])
+        return features_min_maxes
 
-        return indicators
+    def __add_qol_indicators(self):
+        """
+        Add to data final quality of life indicator of each country
+        :return: quality of life indicators
+        """
+        raise NotImplemented
+

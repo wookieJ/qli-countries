@@ -8,22 +8,16 @@ from script.model.parameter import Parameter
 from script.config import common
 from script.utils.data_processing import linear_regression
 import matplotlib.pyplot as plt
-import numpy as np
 import json
 
 qualities = dict()
 
 
-def merge_indicators(indicators):
-    for geo in indicators:
-        if geo not in qualities:
-            qualities[geo] = dict()
-        for qol in indicators[geo]:
-            if qol not in qualities[geo]:
-                qualities[geo][qol] = indicators[geo][qol]
-
-
 def run():
+    """
+    Main algorithm which gathering indicators of each parameters and merging them into one response
+    :return:
+    """
     country = 'PL'
     countries = dict()
 
@@ -38,19 +32,34 @@ def run():
                 countries[geo] = p['dimension']['geo']['category']['label'][geo]
 
         linear_reg = linear_regression(indicators[country][param_name])
-
-        plt.title(f'{param_name} in {country}')
-        plt.plot(indicators['PL'][param_name])
-        plt.plot(linear_reg)
-        plt.xlabel('feature')
-        plt.ylabel('value')
         years = [i for i in range(2004, 2018)]
-        plt.xticks(np.arange(len(years)), years, rotation=70)
-        plt.show()
-
+        plt.plot(indicators['PL'][param_name])
+        parameter.plot_feature(linear_reg, years, f'{param_name} in {country}')
         merge_indicators(indicators)
 
     print(countries)
+    return_to_stdout()
+
+
+def merge_indicators(indicators):
+    """
+    Merging indicators from parameter into one response
+    :param indicators: indicators from one parameter
+    :return:
+    """
+    for geo in indicators:
+        if geo not in qualities:
+            qualities[geo] = dict()
+        for qol in indicators[geo]:
+            if qol not in qualities[geo]:
+                qualities[geo][qol] = indicators[geo][qol]
+
+
+def return_to_stdout():
+    """
+    Printing final response in json format to stdout
+    :return:
+    """
     result = dict()
     result['qualities'] = qualities
     result['countries'] = common.COUNTRIES
