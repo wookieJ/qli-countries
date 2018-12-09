@@ -1,3 +1,11 @@
+"""
+    File name: data_processing.py
+    Author: Łukasz Jędryczka
+    Date created: 06/12/2018
+    Python Version: 3.6
+
+    Processing data
+"""
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
 import numpy as np
@@ -9,6 +17,12 @@ warnings.filterwarnings(action="ignore", module="sklearn", message="^internal ge
 
 
 def smooth_data(data, return_all=False):
+    """
+    Smoothing data with linear regression, mean or moving average value
+    :param data: data we want to smooth
+    :param return_all: if we want more approximations then linear regression
+    :return: smoothed data
+    """
     in_data = np.array([i for i in range(len(data))])
     in_data = in_data.reshape(-1, 1)
     data = np.array(data)
@@ -33,6 +47,11 @@ def smooth_data(data, return_all=False):
 
 
 def linear_regression(data):
+    """
+    Calculating linear regression for data
+    :param data: input data
+    :return: linear regression
+    """
     in_data = np.array([i for i in range(len(data))])
     in_data = in_data.reshape(-1, 1)
     data = np.array(data)
@@ -48,6 +67,12 @@ def linear_regression(data):
 
 
 def replace_nan_data(base_data, replacing_data):
+    """
+    Replacing NaN values of data
+    :param base_data: data to fill
+    :param replacing_data: data we want to replace with
+    :return: data with replaced values
+    """
     x_data = np.array(base_data)
     y_data = np.array(replacing_data)
     for idx, d in enumerate(x_data):
@@ -57,6 +82,11 @@ def replace_nan_data(base_data, replacing_data):
 
 
 def replace_nan_with_mean(data):
+    """
+    Replace NaN values with mean value
+    :param data: data we want to fill
+    :return: data with replaced values
+    """
     result = np.array(data)
     mean = np.nanmean(data)
     indexes = np.where(np.isnan(data))
@@ -65,6 +95,13 @@ def replace_nan_with_mean(data):
 
 
 def replace_nan_with_moving_average(data, weights=False):
+    """
+    Replace data with moving average value
+    :param data:
+    :param data:
+    :param weights:
+    :return: data with replaced values
+    """
     result = np.array(data)
     if math.isnan(result[0]):
         result[0] = np.nanmean(result)
