@@ -7,6 +7,7 @@ import java.util.Objects;
 public class QualityOfLife {
 
     private Map<String, Map<String, List<Double>>> qualities;
+    private Map<String,String> countries;
 
     public QualityOfLife() {
 
@@ -16,12 +17,25 @@ public class QualityOfLife {
         this.qualities = qualities;
     }
 
+    public QualityOfLife(Map<String, Map<String, List<Double>>> qualities, Map<String, String> countries) {
+        this.qualities = qualities;
+        this.countries = countries;
+    }
+
     public Map<String, Map<String, List<Double>>> getQualities() {
         return qualities;
     }
 
     public void setQualities(Map<String, Map<String, List<Double>>> qualities) {
         this.qualities = qualities;
+    }
+
+    public Map<String, String> getCountries() {
+        return countries;
+    }
+
+    public void setCountries(Map<String, String> countries) {
+        this.countries = countries;
     }
 
     @Override
