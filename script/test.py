@@ -58,7 +58,8 @@ COUNTRIES = {
     'UK': 'United Kingdom',
     'XK': 'Kosovo (under United Nations Security Council Resolution 1244/99)',
     'EA': 'Euro area',
-    'EU': 'European Union'
+    'EU': 'European Union',
+    'EU_AVG': 'European average value'
 }
 
 
@@ -67,7 +68,7 @@ def run():
     for country in ['AL', 'AM', 'AT', 'AZ', 'BE', 'BG', 'BY', 'CH', 'CY', 'CZ', 'DE', 'DK', 'EA18', 'EA19', 'EE',
                     'EEA30', 'EL', 'ES', 'EU27', 'EU28', 'FI', 'FR', 'FX', 'GE', 'HR', 'HU', 'IE', 'IS', 'IT', 'LI',
                     'LT', 'LU', 'LV', 'MD', 'ME', 'MK', 'MT', 'NL', 'NO', 'PL', 'PT', 'RO', 'RS', 'RU', 'SE', 'SI',
-                    'SK', 'SM', 'TR', 'UA', 'UK', 'XK', 'EA', 'EU']:
+                    'SK', 'SM', 'TR', 'UA', 'UK', 'XK', 'EA', 'EU', 'EU_AVG']:
         ind[country] = dict()
         for qol in ['MAT_LIVING', 'HEALTH', 'EDUCATION', 'ECON_SAFETY',
                     'LEISURE', 'GOVERN', 'LIVING_ENV', 'LIFE_EXP', 'EMPLOY']:
