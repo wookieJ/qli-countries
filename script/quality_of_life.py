@@ -6,8 +6,6 @@
 """
 from script.model.parameter import Parameter
 from script.config import common
-from script.utils.data_processing import linear_regression
-import matplotlib.pyplot as plt
 import json
 
 qualities = dict()
@@ -18,9 +16,7 @@ def run():
     Main algorithm which gathering indicators of each parameters and merging them into one response
     :return:
     """
-    country = 'PL'
     countries = dict()
-    years = [i for i in range(2004, 2018)]
 
     for param_name in common.QOL_PARAMS:
         parameter = Parameter(param_name)
@@ -32,16 +28,9 @@ def run():
             for geo in p['dimension']['geo']['category']['label']:
                 countries[geo] = p['dimension']['geo']['category']['label'][geo]
 
-        linear_reg = linear_regression(indicators[country][param_name])
-        # plt.plot(indicators['PL'][param_name])
-        # parameter.plot_feature(linear_reg, years, f'{param_name} in {country}')
         __merge_indicators(indicators)
 
     __add_qol_indicators()
-    # for country in common.COUNTRIES:
-    #     Parameter.plot_feature(qualities[country]['qol'], years, f'Quality of life in {common.COUNTRIES[country]}')
-
-    print(countries)
     __return_to_stdout()
 
 
