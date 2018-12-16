@@ -1,10 +1,6 @@
 package qli;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.fhpotsdam.unfolding.UnfoldingMap;
-import de.fhpotsdam.unfolding.data.GeoJSONReader;
-import de.fhpotsdam.unfolding.geo.Location;
-import de.fhpotsdam.unfolding.utils.MapUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -15,6 +11,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import qli.data.QualityOfLife;
@@ -33,9 +30,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import qli.utils.Factors;
-import processing.core.PApplet;
+import qli.world.BusinessRegion;
+import qli.world.Country;
+import qli.world.World;
+import qli.world.WorldBuilder;
 
-public class Controller extends PApplet {
+public class Controller {
 
     @FXML private Rectangle legend0;
     @FXML private Rectangle legend1;
@@ -53,6 +53,8 @@ public class Controller extends PApplet {
 
     @FXML private Slider sliderYears;
 
+    @FXML private StackPane stackPane;
+
     @FXML private LineChart<Float,Double> factorChart;
     @FXML private CategoryAxis yearsAxis;
     @FXML private NumberAxis values;
@@ -64,7 +66,7 @@ public class Controller extends PApplet {
     private String selectedFactor, selectedCountry;
     private QualityOfLife qualityOfLife;
     private int countriesCounter = 0;
-    private UnfoldingMap map;
+    private World world;
 
 
     @FXML
@@ -79,6 +81,7 @@ public class Controller extends PApplet {
         setFactors();
         setCountries();
         displayCountryCodes();
+        showMap();
         listFactors.getSelectionModel().selectFirst();
         countryList.getSelectionModel().select("Poland");
         countryList.scrollTo("Poland");
@@ -187,7 +190,6 @@ public class Controller extends PApplet {
             sliderYears.increment();
             currentYear = sliderYears.getValue();
         }
-        showMap();
     }
     @FXML
     private void decreaseYear() {
@@ -238,22 +240,17 @@ public class Controller extends PApplet {
 
     }
 
-    public void settings() {
-        size(800,600);
-
-    }
-
-    public void setup() {
-        map = new UnfoldingMap(this);
-
-        MapUtils.createDefaultEventDispatcher(this, map);
-    }
-
-    public void draw() {
-        map.draw();
-    }
-
     private void showMap() {
-        PApplet.main(new String[] { Controller.class.getName()});
+        world = WorldBuilder.create()
+                .resolution(World.Resolution.HI_RES)
+                .zoomEnabled(true)
+                .selectionEnabled(true)
+                .build();
+        stackPane.getChildren().add(world);
+        BusinessRegion.EU.setColor(Color.rgb(124,208,255));
+        Country.FI.setColor(Color.valueOf(ColorsLegend.RED.toString()));
     }
+
+
+
 }
