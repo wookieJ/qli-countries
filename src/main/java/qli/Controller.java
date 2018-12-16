@@ -1,6 +1,10 @@
 package qli;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.fhpotsdam.unfolding.UnfoldingMap;
+import de.fhpotsdam.unfolding.data.GeoJSONReader;
+import de.fhpotsdam.unfolding.geo.Location;
+import de.fhpotsdam.unfolding.utils.MapUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -23,15 +27,15 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
-import qli.utils.Countries;
 import qli.utils.Factors;
+import processing.core.PApplet;
 
-
-public class Controller {
+public class Controller extends PApplet {
 
     @FXML private Rectangle legend0;
     @FXML private Rectangle legend1;
@@ -60,6 +64,7 @@ public class Controller {
     private String selectedFactor, selectedCountry;
     private QualityOfLife qualityOfLife;
     private int countriesCounter = 0;
+    private UnfoldingMap map;
 
 
     @FXML
@@ -73,9 +78,10 @@ public class Controller {
         setLabels();
         setFactors();
         setCountries();
+        displayCountryCodes();
         listFactors.getSelectionModel().selectFirst();
-        countryList.getSelectionModel().select("Polska");
-        countryList.scrollTo("Polska");
+        countryList.getSelectionModel().select("Poland");
+        countryList.scrollTo("Poland");
         selectedCountry = countryList.getSelectionModel().getSelectedItem();
         selectedFactor = listFactors.getSelectionModel().getSelectedItem();
         currentYear = sliderYears.getValue();
@@ -112,6 +118,12 @@ public class Controller {
         });
     }
 
+    private void displayCountryCodes() {
+        for(Map.Entry<String,String> entry : qualityOfLife.getCountries().entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+        }
+    }
+
     private void getData() throws IOException, InterruptedException{
         String command = "python ./script/test.py";
         Process p = null;
@@ -133,7 +145,9 @@ public class Controller {
         } else {
             System.out.println("ERROR");
         }
+        System.out.println(qualityOfLife.getCountries());
     }
+
 
     private void setLegend() {
         legend0.setFill(Color.valueOf(ColorsLegend.RED.toString()));
@@ -162,8 +176,8 @@ public class Controller {
     }
 
     private void setCountries() {
-        for(Countries country : Countries.values()) {
-            countries.add(country.toString());
+        for(String country : qualityOfLife.getCountries().values()) {
+            countries.add(country);
         }
         countryList.setItems(countries);
     }
@@ -173,6 +187,7 @@ public class Controller {
             sliderYears.increment();
             currentYear = sliderYears.getValue();
         }
+        showMap();
     }
     @FXML
     private void decreaseYear() {
@@ -182,10 +197,11 @@ public class Controller {
         }
     }
 
-    public String getCountryByValue(String countryName) {
-        for(Countries countries : Countries.values()) {
-            if(countries.toString() == countryName) {
-                return countries.name();
+    private String getCountryByName(String countryName) {
+        for (Map.Entry<String,String> entry : qualityOfLife.getCountries().entrySet()) {
+            if(entry.getValue().equals(countryName)) {
+                System.out.println(entry.getValue());
+                return entry.getKey();
             }
         }
         return "";
@@ -203,7 +219,7 @@ public class Controller {
     private void fillChart(String factorName, String countryName, boolean clear) {
         if(clear)
             factorChart.getData().clear();
-        List<Double> realValues = qualityOfLife.getQualities().get(getCountryByValue(countryName)).get(getFactorByValue(factorName));
+        List<Double> realValues = qualityOfLife.getQualities().get(getCountryByName(countryName)).get(getFactorByValue(factorName));
         XYChart.Series series = new XYChart.Series();
         factorChart.setTitle(factorName);
         series.setName(countryName);
@@ -222,4 +238,22 @@ public class Controller {
 
     }
 
+    public void settings() {
+        size(800,600);
+
+    }
+
+    public void setup() {
+        map = new UnfoldingMap(this);
+
+        MapUtils.createDefaultEventDispatcher(this, map);
+    }
+
+    public void draw() {
+        map.draw();
+    }
+
+    private void showMap() {
+        PApplet.main(new String[] { Controller.class.getName()});
+    }
 }
