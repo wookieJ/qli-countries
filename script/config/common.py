@@ -10,6 +10,10 @@ from script.config.health import life_expectancy, unmet_medical_exams, healthy_l
 from script.config.education import participation_rate_in_education, early_leavers_from_education, \
     teritiary_education_level
 from script.config.material import mean_median_net_income, leaking_roof_population, poverty_risk, gross_domestic_product
+from script.config.econ_safety import face_unexpected_financial_expenses, arrears, offences
+from script.config.governance import gender_employment_gap, employments_rate
+from script.config.living_environment import exposure_to_air_polution, noise
+from script.config.employment import employment_rate, household_with_low_work
 
 API_COMMON_CONFIG = {
     'host': 'http://ec.europa.eu/eurostat/wdds/rest/data/v2.1',
@@ -86,9 +90,13 @@ FILTERS = {
     'geo': list(COUNTRIES.keys())
 }
 
-HEALTH = 'health'
-EDUCATION = 'education'
-MATERIAL_CONDITIONS = 'material_living_conditions'
+HEALTH = 'HEALTH'
+EDUCATION = 'EDUCATION'
+MAT_LIVING = 'MAT_LIVING'
+ECON_SAFETY = 'ECON_SAFETY'
+GOVERN = 'GOVERN'
+LIVING_ENV = 'LIVING_ENV'
+EMPLOY = 'EMPLOY'
 
 QOL_PARAMS = {
     HEALTH: {
@@ -101,10 +109,27 @@ QOL_PARAMS = {
         'trng_lfs_02': participation_rate_in_education,
         'edat_lfse_14': early_leavers_from_education
     },
-    MATERIAL_CONDITIONS: {
+    MAT_LIVING: {
         'ilc_di03': mean_median_net_income,
         'nama_10_pc': gross_domestic_product,
         'ilc_mdho01': leaking_roof_population,
         'ilc_li02': poverty_risk
+    },
+    ECON_SAFETY: {
+        'ilc_mdes04': face_unexpected_financial_expenses,
+        'ilc_mdes05': arrears,
+        'crim_off_cat': offences
+    },
+    GOVERN: {
+        'tesem060': gender_employment_gap,
+        'lfst_r_eredcobu': employments_rate
+    },
+    LIVING_ENV: {
+        'sdg_11_50': exposure_to_air_polution,
+        'ilc_mddw01': noise
+    },
+    EMPLOY: {
+        'lfsa_ergaed': employment_rate,
+        'ilc_lvhl11': household_with_low_work
     }
 }

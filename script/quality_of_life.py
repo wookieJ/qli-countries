@@ -38,8 +38,8 @@ def run():
         __merge_indicators(indicators)
 
     __add_qol_indicators()
-    for country in common.COUNTRIES:
-        Parameter.plot_feature(qualities[country]['qol'], years, f'Quality of life in {common.COUNTRIES[country]}')
+    # for country in common.COUNTRIES:
+    #     Parameter.plot_feature(qualities[country]['qol'], years, f'Quality of life in {common.COUNTRIES[country]}')
 
     print(countries)
     __return_to_stdout()
