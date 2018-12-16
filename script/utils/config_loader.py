@@ -1,3 +1,11 @@
+"""
+    File name: quality_of_life.py
+    Author: Łukasz Jędryczka
+    Date created: 17/11/2018
+    Python Version: 3.6
+
+    Getting configuration from files defined in config directory.
+"""
 from script.config import common
 
 
@@ -92,3 +100,44 @@ class Configuration:
             return common.QOL_PARAMS[param_name]
         else:
             return None
+
+    @staticmethod
+    def get_value(key):
+        """
+        Getting value of key in configuration file
+
+        :param key: key of value we want to know
+        :return: value of key in configuration file
+        """
+        for qol_param in common.QOL_PARAMS:
+            if key in common.QOL_PARAMS[qol_param]:
+                return common.QOL_PARAMS[qol_param][key]
+
+    @staticmethod
+    def get_countries():
+        """
+        Getting countries list
+        :return: countries list
+        """
+        return common.COUNTRIES
+
+    @staticmethod
+    def get_time_interval():
+        """
+        Getting time interval
+        :return: time interval
+        """
+        return common.TIME_INTERVAL
+
+    @staticmethod
+    def get_number_of_features(key):
+        """
+        Getting number of features
+        :param key: param name
+        :return: number of param features
+        """
+        sum = 0
+        for name, module in common.QOL_PARAMS[key].items():
+            sum += module.LENGTH
+
+        return sum
