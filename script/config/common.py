@@ -1,3 +1,4 @@
+# coding=utf-8
 """
     File name: common.py
     Author: Łukasz Jędryczka
@@ -6,14 +7,14 @@
 
     Common configurations attributes for API datasets.
 """
-from script.config.health import life_expectancy, unmet_medical_exams, healthy_life_years
-from script.config.education import participation_rate_in_education, early_leavers_from_education, \
+from config.health import life_expectancy, unmet_medical_exams, healthy_life_years
+from config.education import participation_rate_in_education, early_leavers_from_education, \
     teritiary_education_level
-from script.config.material import mean_median_net_income, leaking_roof_population, poverty_risk, gross_domestic_product
-from script.config.econ_safety import face_unexpected_financial_expenses, arrears, offences
-from script.config.governance import gender_employment_gap, employments_rate
-from script.config.living_environment import exposure_to_air_polution, noise
-from script.config.employment import employment_rate, household_with_low_work
+from config.material import mean_median_net_income, leaking_roof_population, poverty_risk, gross_domestic_product
+from config.econ_safety import face_unexpected_financial_expenses, arrears, offences
+from config.governance import gender_employment_gap, employments_rate
+from config.living_environment import exposure_to_air_polution, noise
+from config.employment import employment_rate, household_with_low_work
 
 API_COMMON_CONFIG = {
     'host': 'http://ec.europa.eu/eurostat/wdds/rest/data/v2.1',

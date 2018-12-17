@@ -1,3 +1,4 @@
+# coding=utf-8
 """
     File name: data_processing.py
     Author: Łukasz Jędryczka
