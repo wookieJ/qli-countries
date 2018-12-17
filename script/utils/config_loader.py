@@ -1,3 +1,4 @@
+# coding=utf-8
 """
     File name: quality_of_life.py
     Author: Łukasz Jędryczka
@@ -6,7 +7,7 @@
 
     Getting configuration from files defined in config directory.
 """
-from script.config import common
+from config import common
 
 
 class Configuration:

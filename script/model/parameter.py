@@ -1,3 +1,4 @@
+# coding=utf-8
 """
     File name: parameter.py
     Author: Łukasz Jędryczka
@@ -6,11 +7,11 @@
 
     Parameter class and their methods. Retrieving data from API and computing data.
 """
-from script.utils.config_loader import Configuration
-from script.utils.load import Loader
-from script.utils.data_parse import parse_json
-from script.utils.data_processing import smooth_data
-from script.utils.data_processing import linear_regression
+from utils.config_loader import Configuration
+from utils.load import Loader
+from utils.data_parse import parse_json
+from utils.data_processing import smooth_data
+from utils.data_processing import linear_regression
 import matplotlib.pyplot as plt
 import numpy as np
 import warnings
