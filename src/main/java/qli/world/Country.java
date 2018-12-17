@@ -16,7 +16,7 @@ public enum Country {
     DE_TOT, DJ, DK, DM, DO, DZ,
     EC, EG, EE, EH, ER, ES, ET,
     FI, FJ, FK, FM, FO, FR,
-    GA, GB, GE, GD, GF, GG, GH, GI, GL, GM, GN, GO, GP, GQ, EL, GS, GT, GU, GW, GY,
+    GA, UK, GE, GD, GF, GG, GH, GI, GL, GM, GN, GO, GP, GQ, EL, GS, GT, GU, GW, GY,
     HK, HM, HN, HR, HT, HU,
     ID, IE, IL, IM, IN, IO, IQ, IR, IS, IT,
     JE, JM, JO, JP, JU,

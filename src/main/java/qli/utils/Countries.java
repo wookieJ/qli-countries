@@ -15,7 +15,7 @@ public enum Countries {
     NL("Holandia"),     NO("Norwegia"),
     PL("Polska"),       PT("Portugalia"),
     RO("Rumunia"),      RS("Serbia"),       RU("Rosja"),
-    SE("Szwecja"),      SI("Słowenia"),     SK("Słowacja"),     SM("San Marino"),
+    SE("Szwecja"),      SI("Słowenia"),     SK("Słowacja"),
     TR("Turcja"),
     UA("Ukraina"),      UK("Wielka Brytania");
 

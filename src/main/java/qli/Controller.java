@@ -14,6 +14,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import qli.data.MockQoLData;
 import qli.data.QualityOfLife;
 import qli.utils.ColorsLegend;
 
@@ -29,6 +30,7 @@ import java.util.Map;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
+import qli.utils.Countries;
 import qli.utils.Factors;
 import qli.world.BusinessRegion;
 import qli.world.Country;
@@ -62,11 +64,12 @@ public class Controller {
     ObservableList<String> factors= FXCollections.observableArrayList();
     ObservableList<String> countries = FXCollections.observableArrayList();
     private ArrayList<String> selectedCountries = new ArrayList<String>();
-    private double currentYear;
+    private Double currentYear;
     private String selectedFactor, selectedCountry;
     private QualityOfLife qualityOfLife;
     private int countriesCounter = 0;
     private World world;
+    private MockQoLData mockData = new MockQoLData();
 
 
     @FXML
@@ -80,7 +83,6 @@ public class Controller {
         setLabels();
         setFactors();
         setCountries();
-        displayCountryCodes();
         showMap();
         listFactors.getSelectionModel().selectFirst();
         countryList.getSelectionModel().select("Poland");
@@ -119,13 +121,9 @@ public class Controller {
                 }
             }
         });
+        showQOL(2018 - currentYear.intValue());
     }
 
-    private void displayCountryCodes() {
-        for(Map.Entry<String,String> entry : qualityOfLife.getCountries().entrySet()) {
-            System.out.println(entry.getKey() + ": " + entry.getValue());
-        }
-    }
 
     private void getData() throws IOException, InterruptedException{
         String command = "python ./script/test.py";
@@ -138,8 +136,10 @@ public class Controller {
 
         if(p != null) {
             BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String s = br.readLine();
-            //System.out.println(s);
+            String s;
+            if((s = br.readLine()) != null) {
+                //System.out.println(s);
+            }
             p.waitFor();
             p.destroy();
 
@@ -148,7 +148,7 @@ public class Controller {
         } else {
             System.out.println("ERROR");
         }
-        System.out.println(qualityOfLife.getCountries());
+        //System.out.println(qualityOfLife.getCountries());
     }
 
 
@@ -190,6 +190,9 @@ public class Controller {
             sliderYears.increment();
             currentYear = sliderYears.getValue();
         }
+        System.out.println(currentYear);
+        showQOL(2018 - currentYear.intValue());
+
     }
     @FXML
     private void decreaseYear() {
@@ -197,6 +200,9 @@ public class Controller {
             sliderYears.decrement();
             currentYear = sliderYears.getValue();
         }
+        System.out.println(currentYear);
+        showQOL(2018 - currentYear.intValue());
+
     }
 
     private String getCountryByName(String countryName) {
@@ -247,8 +253,26 @@ public class Controller {
                 .selectionEnabled(true)
                 .build();
         stackPane.getChildren().add(world);
-        BusinessRegion.EU.setColor(Color.rgb(124,208,255));
-        Country.FI.setColor(Color.valueOf(ColorsLegend.RED.toString()));
+    }
+
+    private void showQOL(int year) {
+        for (Country country : Country.values()) {
+            if(mockData.getAllCountries().get(country.getName()) == null) {
+                country.setColor(Color.valueOf(ColorsLegend.GRAY.toString()));
+            }else if(mockData.getAllCountries().get(country.getName()).get(year) >= 30.0) {
+                country.setColor(Color.valueOf(ColorsLegend.RED.toString()));
+            } else if (mockData.getAllCountries().get(country.getName()).get(year) < 25.0 && mockData.getAllCountries().get(country.getName()).get(year) >= 22.0) {
+                country.setColor(Color.valueOf(ColorsLegend.DARK_ORANGE.toString()));
+            } else if (mockData.getAllCountries().get(country.getName()).get(year) < 22.0 && mockData.getAllCountries().get(country.getName()).get(year) >= 20.0) {
+                country.setColor(Color.valueOf(ColorsLegend.LIGHT_ORANGE.toString()));
+            }else if (mockData.getAllCountries().get(country.getName()).get(year) < 20.0 && mockData.getAllCountries().get(country.getName()).get(year) >= 15.0) {
+                country.setColor(Color.valueOf(ColorsLegend.YELLOW.toString()));
+            }else if (mockData.getAllCountries().get(country.getName()).get(year) < 10.0) {
+                country.setColor(Color.valueOf(ColorsLegend.LIGHT_YELLOW.toString()));
+            }
+
+
+        }
     }
 
 

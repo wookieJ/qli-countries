@@ -8,7 +8,7 @@ import java.util.List;
 import static qli.world.Country.*;
 
 public enum BusinessRegion implements CRegion {
-    EU(BE, EL, LT, PT, BG, ES, LU, RO, CZ, FR, HU, SI, DK, HR, MT, SK, DE_TOT, IT, NL, FI, EE, CY, AT, SE, IE, LV, PL, GB);
+    EU(BE, EL, LT, PT, BG, ES, LU, RO, CZ, FR, HU, SI, DK, HR, MT, SK, DE_TOT, IT, NL, FI, EE, CY, AT, SE, IE, LV, PL, UK);
 
     private List<Country> countries;
 
