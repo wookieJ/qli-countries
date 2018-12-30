@@ -22,15 +22,11 @@ import javafx.scene.control.ListView;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
-import qli.utils.Countries;
 import qli.utils.Factors;
 import qli.world.BusinessRegion;
 import qli.world.Country;
@@ -88,16 +84,26 @@ public class Controller {
         countryList.getSelectionModel().select("Poland");
         countryList.scrollTo("Poland");
         selectedCountry = countryList.getSelectionModel().getSelectedItem();
+        selectedCountries.add(selectedCountry);
         selectedFactor = listFactors.getSelectionModel().getSelectedItem();
         currentYear = sliderYears.getValue();
         fillChart(selectedFactor,selectedCountry, true);
+
+        /**
+         * TODO: Copy the list of selected countries from previous factor to the new one
+         */
         listFactors.setOnMouseClicked(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent event) {
                 selectedFactor = listFactors.getSelectionModel().getSelectedItem();
-                fillChart(selectedFactor, selectedCountry,true);
-                countriesCounter = 0;
+                //fillChart(selectedFactor, selectedCountry,true);
+                factorChart.getData().clear();
+                System.out.println(selectedCountries);
+                for (String country : selectedCountries) {
+                    fillChart(selectedFactor, country, false);
+                }
+                /*countriesCounter = 0;
                 selectedCountries.clear();
-                selectedCountries.add(selectedCountry);
+                selectedCountries.add(selectedCountry);*/
             }
         });
         countryList.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -126,7 +132,7 @@ public class Controller {
 
 
     private void getData() throws IOException, InterruptedException{
-        String command = "python ./script/test.py";
+        String command = "python ./script/quality_of_life.py";
         Process p = null;
         try {
             p = Runtime.getRuntime().exec(command);
@@ -148,7 +154,6 @@ public class Controller {
         } else {
             System.out.println("ERROR");
         }
-        //System.out.println(qualityOfLife.getCountries());
     }
 
 
@@ -229,6 +234,8 @@ public class Controller {
             factorChart.getData().clear();
         List<Double> realValues = qualityOfLife.getQualities().get(getCountryByName(countryName)).get(getFactorByValue(factorName));
         XYChart.Series series = new XYChart.Series();
+        Double maxValue = Collections.max(realValues);
+        Double minValue = Collections.min(realValues);
         factorChart.setTitle(factorName);
         series.setName(countryName);
         series.getData().add(new XYChart.Data("2008", realValues.get(4)));
@@ -243,9 +250,20 @@ public class Controller {
         series.getData().add(new XYChart.Data("2017", realValues.get(13)));
 
         factorChart.getData().add(series);
+        /**
+         * TODO: Fix the scaling of the values axis
+         */
+        /*values.setAutoRanging(false);
+        values.setLowerBound(minValue - 0.1);
+        values.setUpperBound(maxValue + 0.1);
+        values.setTickUnit(0.05);*/
+
 
     }
 
+    /**
+     * TODO: Fix the problem with zooming the map (Doesnt want to zoom)
+     */
     private void showMap() {
         world = WorldBuilder.create()
                 .resolution(World.Resolution.HI_RES)
@@ -256,22 +274,21 @@ public class Controller {
     }
 
     private void showQOL(int year) {
+        showMap();
         for (Country country : Country.values()) {
-            if(mockData.getAllCountries().get(country.getName()) == null) {
+            if(qualityOfLife.getQualities().get(country.getName()) == null) {
                 country.setColor(Color.valueOf(ColorsLegend.GRAY.toString()));
-            }else if(mockData.getAllCountries().get(country.getName()).get(year) >= 30.0) {
+            } else if (qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) >= 28.0) {
                 country.setColor(Color.valueOf(ColorsLegend.RED.toString()));
-            } else if (mockData.getAllCountries().get(country.getName()).get(year) < 25.0 && mockData.getAllCountries().get(country.getName()).get(year) >= 22.0) {
+            } else if (qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) < 25.0 && qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) >= 22.0) {
                 country.setColor(Color.valueOf(ColorsLegend.DARK_ORANGE.toString()));
-            } else if (mockData.getAllCountries().get(country.getName()).get(year) < 22.0 && mockData.getAllCountries().get(country.getName()).get(year) >= 20.0) {
+            } else if (qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) < 22.0 && qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) >= 20.0) {
                 country.setColor(Color.valueOf(ColorsLegend.LIGHT_ORANGE.toString()));
-            }else if (mockData.getAllCountries().get(country.getName()).get(year) < 20.0 && mockData.getAllCountries().get(country.getName()).get(year) >= 15.0) {
+            } else if (qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) < 20.0 && qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) >= 13.0) {
                 country.setColor(Color.valueOf(ColorsLegend.YELLOW.toString()));
-            }else if (mockData.getAllCountries().get(country.getName()).get(year) < 10.0) {
+            } else if (qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) < 13.0) {
                 country.setColor(Color.valueOf(ColorsLegend.LIGHT_YELLOW.toString()));
             }
-
-
         }
     }
 

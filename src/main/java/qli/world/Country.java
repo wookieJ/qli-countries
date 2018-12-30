@@ -10,31 +10,23 @@ import java.util.List;
  * Created by hansolo on 22.11.16.
  */
 public enum Country {
-    AD, AE, AF, AG, AI, AL, AM, AO, AR, AS, AT, AU, AW, AX, AZ,
-    BA, BB, BD, BE, BF, BG, BH, BI, BJ, BL, BN, BO, BM, BQ, BR, BS, BT, BV, BW, BY, BZ,
-    CA, CC, CD, CF, CG, CH, CI, CK, CL, CM, CN, CO, CR, CU, CV, CW, CX, CY, CZ,
-    DE_TOT, DJ, DK, DM, DO, DZ,
-    EC, EG, EE, EH, ER, ES, ET,
-    FI, FJ, FK, FM, FO, FR,
-    GA, UK, GE, GD, GF, GG, GH, GI, GL, GM, GN, GO, GP, GQ, EL, GS, GT, GU, GW, GY,
-    HK, HM, HN, HR, HT, HU,
-    ID, IE, IL, IM, IN, IO, IQ, IR, IS, IT,
-    JE, JM, JO, JP, JU,
-    KE, KG, KH, KI, KM, KN, KP, KR, XK, KV, KW, KY, KZ,
-    LA, LB, LC, LI, LK, LR, LS, LT, LU, LV, LY,
-    MA, MC, MD, MG, ME, MF, MH, MK, ML, MO, MM, MN, MP, MQ, MR, MS, MT, MU, MV, MW, MX, MY, MZ,
-    NA, NC, NE, NF, NG, NI, NL, NO, NP, NR, NU, NZ,
-    OM,
-    PA, PE, PF, PG, PH, PK, PL, PM, PN, PR, PS, PT, PW, PY,
-    QA,
-    RE, RO, RS, RU, RW,
-    SA, SB, SC, SD, SE, SG, SH, SI, SJ, SK, SL, SM, SN, SO, SR, SS, ST, SV, SX, SY, SZ,
-    TC, TD, TF, TG, TH, TJ, TK, TL, TM, TN, TO, TR, TT, TV, TW, TZ,
-    UA, UG, UM_DQ, UM_FQ, UM_HQ, UM_JQ, UM_MQ, UM_WQ, US, UY, UZ,
-    VA, VC, VE, VG, VI, VN, VU,
-    WF, WS,
-    YE, YT,
-    ZA, ZM, ZW;
+    AL, AM, AT, AZ,
+    BE, BG, BY,
+    CH, CY, CZ,
+    DE_TOT, DK,
+    EE, EL, ES,
+    FI, FR,
+    GE,
+    HR, HU,
+    IE, IS, IT,
+    LI, LT, LU, LV,
+    MD, ME, MK, MT,
+    NL, NO,
+    PL, PT,
+    RO, RS, RU,
+    SE, SI, SK,
+    TR,
+    UA, UK;
 
     private ValueObject value;
     private Color       color;
@@ -56,4 +48,3 @@ public enum Country {
     public Color getColor() { return color; }
     public void setColor(final Color COLOR) { color = COLOR; }
 }
-
