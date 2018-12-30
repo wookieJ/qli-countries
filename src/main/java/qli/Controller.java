@@ -28,7 +28,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import qli.utils.Factors;
-import qli.world.BusinessRegion;
 import qli.world.Country;
 import qli.world.World;
 import qli.world.WorldBuilder;
@@ -56,6 +55,8 @@ public class Controller {
     @FXML private LineChart<Float,Double> factorChart;
     @FXML private CategoryAxis yearsAxis;
     @FXML private NumberAxis values;
+
+    @FXML private Button clearCountries;
 
     ObservableList<String> factors= FXCollections.observableArrayList();
     ObservableList<String> countries = FXCollections.observableArrayList();
@@ -88,10 +89,7 @@ public class Controller {
         selectedFactor = listFactors.getSelectionModel().getSelectedItem();
         currentYear = sliderYears.getValue();
         fillChart(selectedFactor,selectedCountry, true);
-
-        /**
-         * TODO: Copy the list of selected countries from previous factor to the new one
-         */
+        
         listFactors.setOnMouseClicked(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent event) {
                 selectedFactor = listFactors.getSelectionModel().getSelectedItem();
@@ -101,9 +99,6 @@ public class Controller {
                 for (String country : selectedCountries) {
                     fillChart(selectedFactor, country, false);
                 }
-                /*countriesCounter = 0;
-                selectedCountries.clear();
-                selectedCountries.add(selectedCountry);*/
             }
         });
         countryList.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -128,6 +123,15 @@ public class Controller {
             }
         });
         showQOL(2018 - currentYear.intValue());
+
+        clearCountries.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                factorChart.getData().clear();
+                countriesCounter = 0;
+                selectedCountries.clear();
+            }
+        });
     }
 
 

@@ -73,6 +73,7 @@
                         <Insets right="5.0" />
                      </VBox.margin>
                   </ScrollPane>
+                  <Button fx:id="clearCountries" mnemonicParsing="false" prefHeight="25.0" prefWidth="201.0" text="Clear Selected Countries" VBox.vgrow="ALWAYS" />
                </children>
             </VBox>
          </children>
