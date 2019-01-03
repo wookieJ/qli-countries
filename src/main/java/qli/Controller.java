@@ -66,7 +66,8 @@ public class Controller {
     private QualityOfLife qualityOfLife;
     private int countriesCounter = 0;
     private World world;
-    private MockQoLData mockData = new MockQoLData();
+    private Double maxValue = 0.0;
+    private Double minValue = 0.0;
 
 
     @FXML
@@ -89,12 +90,14 @@ public class Controller {
         selectedFactor = listFactors.getSelectionModel().getSelectedItem();
         currentYear = sliderYears.getValue();
         fillChart(selectedFactor,selectedCountry, true);
-        
+
         listFactors.setOnMouseClicked(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent event) {
                 selectedFactor = listFactors.getSelectionModel().getSelectedItem();
                 //fillChart(selectedFactor, selectedCountry,true);
                 factorChart.getData().clear();
+                minValue = 0.0;
+                maxValue = 0.0;
                 System.out.println(selectedCountries);
                 for (String country : selectedCountries) {
                     fillChart(selectedFactor, country, false);
@@ -171,11 +174,11 @@ public class Controller {
     }
 
     private void setLabels(){
-        legLabel0.setText("> 30");
-        legLabel1.setText("22 - 30");
-        legLabel2.setText("14 - 22");
-        legLabel3.setText("6 - 14");
-        legLabel4.setText("< 6");
+        legLabel0.setText("> 28");
+        legLabel1.setText("22 - 28");
+        legLabel2.setText("20 - 22");
+        legLabel3.setText("13 - 20");
+        legLabel4.setText("< 13");
         legLabel5.setText("No data");
     }
 
@@ -199,7 +202,6 @@ public class Controller {
             sliderYears.increment();
             currentYear = sliderYears.getValue();
         }
-        System.out.println(currentYear);
         showQOL(2018 - currentYear.intValue());
 
     }
@@ -209,7 +211,6 @@ public class Controller {
             sliderYears.decrement();
             currentYear = sliderYears.getValue();
         }
-        System.out.println(currentYear);
         showQOL(2018 - currentYear.intValue());
 
     }
@@ -238,8 +239,14 @@ public class Controller {
             factorChart.getData().clear();
         List<Double> realValues = qualityOfLife.getQualities().get(getCountryByName(countryName)).get(getFactorByValue(factorName));
         XYChart.Series series = new XYChart.Series();
-        Double maxValue = Collections.max(realValues);
-        Double minValue = Collections.min(realValues);
+        if(maxValue < Collections.max(realValues)) {
+            maxValue = Collections.max(realValues);
+        }
+
+        if(minValue > Collections.min(realValues)) {
+            minValue = Collections.min(realValues);
+        }
+        //Double minValue = Collections.min(realValues);
         factorChart.setTitle(factorName);
         series.setName(countryName);
         series.getData().add(new XYChart.Data("2008", realValues.get(4)));
@@ -255,12 +262,12 @@ public class Controller {
 
         factorChart.getData().add(series);
         /**
-         * TODO: Fix the scaling of the values axis
+         * COMPLETED: Fix the scaling of the values axis
          */
-        /*values.setAutoRanging(false);
+        values.setAutoRanging(false);
         values.setLowerBound(minValue - 0.1);
         values.setUpperBound(maxValue + 0.1);
-        values.setTickUnit(0.05);*/
+        values.setTickUnit(0.1);
 
 
     }
@@ -284,7 +291,7 @@ public class Controller {
                 country.setColor(Color.valueOf(ColorsLegend.GRAY.toString()));
             } else if (qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) >= 28.0) {
                 country.setColor(Color.valueOf(ColorsLegend.RED.toString()));
-            } else if (qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) < 25.0 && qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) >= 22.0) {
+            } else if (qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) < 28.0 && qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) >= 22.0) {
                 country.setColor(Color.valueOf(ColorsLegend.DARK_ORANGE.toString()));
             } else if (qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) < 22.0 && qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) >= 20.0) {
                 country.setColor(Color.valueOf(ColorsLegend.LIGHT_ORANGE.toString()));
