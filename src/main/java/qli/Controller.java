@@ -165,11 +165,11 @@ public class Controller {
 
 
     private void setLegend() {
-        legend0.setFill(Color.valueOf(ColorsLegend.RED.toString()));
-        legend1.setFill(Color.valueOf(ColorsLegend.DARK_ORANGE.toString()));
-        legend2.setFill(Color.valueOf(ColorsLegend.LIGHT_ORANGE.toString()));
-        legend3.setFill(Color.valueOf(ColorsLegend.YELLOW.toString()));
-        legend4.setFill(Color.valueOf(ColorsLegend.LIGHT_YELLOW.toString()));
+        legend0.setFill(Color.valueOf(ColorsLegend.GREEN.toString()));
+        legend1.setFill(Color.valueOf(ColorsLegend.LIGHT_GREEN.toString()));
+        legend2.setFill(Color.valueOf(ColorsLegend.YELLOW.toString()));
+        legend3.setFill(Color.valueOf(ColorsLegend.ORANGE.toString()));
+        legend4.setFill(Color.valueOf(ColorsLegend.RED.toString()));
         legend5.setFill(Color.valueOf(ColorsLegend.GRAY.toString()));
     }
 
@@ -265,8 +265,8 @@ public class Controller {
          * COMPLETED: Fix the scaling of the values axis
          */
         values.setAutoRanging(false);
-        values.setLowerBound(minValue - 0.1);
-        values.setUpperBound(maxValue + 0.1);
+        values.setLowerBound(minValue - 0.5);
+        values.setUpperBound(maxValue + 0.5);
         values.setTickUnit(0.1);
 
 
@@ -290,15 +290,15 @@ public class Controller {
             if(qualityOfLife.getQualities().get(country.getName()) == null) {
                 country.setColor(Color.valueOf(ColorsLegend.GRAY.toString()));
             } else if (qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) >= 28.0) {
-                country.setColor(Color.valueOf(ColorsLegend.RED.toString()));
-            } else if (qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) < 28.0 && qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) >= 22.0) {
-                country.setColor(Color.valueOf(ColorsLegend.DARK_ORANGE.toString()));
-            } else if (qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) < 22.0 && qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) >= 20.0) {
-                country.setColor(Color.valueOf(ColorsLegend.LIGHT_ORANGE.toString()));
-            } else if (qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) < 20.0 && qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) >= 13.0) {
+                country.setColor(Color.valueOf(ColorsLegend.GREEN.toString()));
+            } else if (qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) < 28.0 && qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) >= 25.0) {
+                country.setColor(Color.valueOf(ColorsLegend.LIGHT_GREEN.toString()));
+            } else if (qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) < 25.0 && qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) >= 22.0) {
                 country.setColor(Color.valueOf(ColorsLegend.YELLOW.toString()));
+            } else if (qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) < 22.0 && qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) >= 13.0) {
+                country.setColor(Color.valueOf(ColorsLegend.ORANGE.toString()));
             } else if (qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) < 13.0) {
-                country.setColor(Color.valueOf(ColorsLegend.LIGHT_YELLOW.toString()));
+                country.setColor(Color.valueOf(ColorsLegend.RED.toString()));
             }
         }
     }
