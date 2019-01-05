@@ -1,6 +1,8 @@
 package qli;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -14,7 +16,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-import qli.data.MockQoLData;
 import qli.data.QualityOfLife;
 import qli.utils.ColorsLegend;
 
@@ -67,7 +68,7 @@ public class Controller {
     private int countriesCounter = 0;
     private World world;
     private Double maxValue = 0.0;
-    private Double minValue = 0.0;
+    private Double minValue = 100.0;
 
 
     @FXML
@@ -87,16 +88,25 @@ public class Controller {
         countryList.scrollTo("Poland");
         selectedCountry = countryList.getSelectionModel().getSelectedItem();
         selectedCountries.add(selectedCountry);
+        countriesCounter++;
         selectedFactor = listFactors.getSelectionModel().getSelectedItem();
         currentYear = sliderYears.getValue();
         fillChart(selectedFactor,selectedCountry, true);
+
+        sliderYears.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                currentYear = newValue.doubleValue();
+                showQOL(2018 - currentYear.intValue());
+            }
+        });
 
         listFactors.setOnMouseClicked(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent event) {
                 selectedFactor = listFactors.getSelectionModel().getSelectedItem();
                 //fillChart(selectedFactor, selectedCountry,true);
                 factorChart.getData().clear();
-                minValue = 0.0;
+                minValue = 100.0;
                 maxValue = 0.0;
                 System.out.println(selectedCountries);
                 for (String country : selectedCountries) {
@@ -133,6 +143,11 @@ public class Controller {
                 factorChart.getData().clear();
                 countriesCounter = 0;
                 selectedCountries.clear();
+                selectedCountry = countryList.getSelectionModel().getSelectedItem();
+                selectedCountries.add(selectedCountry);
+                countriesCounter++;
+                fillChart(selectedFactor,selectedCountry, false);
+
             }
         });
     }
@@ -246,7 +261,6 @@ public class Controller {
         if(minValue > Collections.min(realValues)) {
             minValue = Collections.min(realValues);
         }
-        //Double minValue = Collections.min(realValues);
         factorChart.setTitle(factorName);
         series.setName(countryName);
         series.getData().add(new XYChart.Data("2008", realValues.get(4)));
@@ -280,8 +294,10 @@ public class Controller {
                 .resolution(World.Resolution.HI_RES)
                 .zoomEnabled(true)
                 .selectionEnabled(true)
+                .backgroundColor(Color.web("#F4F4F4"))
                 .build();
         stackPane.getChildren().add(world);
+        world.zoomToCountry(Country.DE_TOT);
     }
 
     private void showQOL(int year) {
