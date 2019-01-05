@@ -192,8 +192,8 @@ public class Controller {
         legLabel0.setText("> 28");
         legLabel1.setText("22 - 28");
         legLabel2.setText("20 - 22");
-        legLabel3.setText("13 - 20");
-        legLabel4.setText("< 13");
+        legLabel3.setText("17 - 20");
+        legLabel4.setText("< 17");
         legLabel5.setText("No data");
     }
 
@@ -311,9 +311,9 @@ public class Controller {
                 country.setColor(Color.valueOf(ColorsLegend.LIGHT_GREEN.toString()));
             } else if (qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) < 25.0 && qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) >= 22.0) {
                 country.setColor(Color.valueOf(ColorsLegend.YELLOW.toString()));
-            } else if (qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) < 22.0 && qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) >= 13.0) {
+            } else if (qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) < 22.0 && qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) >= 17.0) {
                 country.setColor(Color.valueOf(ColorsLegend.ORANGE.toString()));
-            } else if (qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) < 13.0) {
+            } else if (qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) < 17.0) {
                 country.setColor(Color.valueOf(ColorsLegend.RED.toString()));
             }
         }
