@@ -166,7 +166,7 @@ public class Controller {
             BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));
             String s;
             if((s = br.readLine()) != null) {
-                //System.out.println(s);
+                System.out.println(s);
             }
             p.waitFor();
             p.destroy();
@@ -275,9 +275,6 @@ public class Controller {
         series.getData().add(new XYChart.Data("2017", realValues.get(13)));
 
         factorChart.getData().add(series);
-        /**
-         * COMPLETED: Fix the scaling of the values axis
-         */
         values.setAutoRanging(false);
         values.setLowerBound(minValue - 0.5);
         values.setUpperBound(maxValue + 0.5);
