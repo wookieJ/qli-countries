@@ -83,6 +83,7 @@ public class Controller {
         setFactors();
         setCountries();
         showMap();
+        System.out.println(qualityOfLife.getQualities().get("IT").get("qol"));
         listFactors.getSelectionModel().selectFirst();
         countryList.getSelectionModel().select("Poland");
         countryList.scrollTo("Poland");
@@ -97,7 +98,8 @@ public class Controller {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 currentYear = newValue.doubleValue();
-                showQOL(2018 - currentYear.intValue());
+//                showQOL(2018 - currentYear.intValue());
+                showQOL(currentYear.intValue() - 2004);
             }
         });
 
@@ -135,8 +137,8 @@ public class Controller {
                 }
             }
         });
-        showQOL(2018 - currentYear.intValue());
-
+//        showQOL(2018 - currentYear.intValue());
+        showQOL(currentYear.intValue() - 2004);
         clearCountries.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -217,8 +219,7 @@ public class Controller {
             sliderYears.increment();
             currentYear = sliderYears.getValue();
         }
-        showQOL(2018 - currentYear.intValue());
-
+        showQOL(currentYear.intValue() - 2004);
     }
     @FXML
     private void decreaseYear() {
@@ -226,8 +227,7 @@ public class Controller {
             sliderYears.decrement();
             currentYear = sliderYears.getValue();
         }
-        showQOL(2018 - currentYear.intValue());
-
+        showQOL(currentYear.intValue() - 2004);
     }
 
     private String getCountryByName(String countryName) {
@@ -306,11 +306,23 @@ public class Controller {
                 country.setColor(Color.valueOf(ColorsLegend.GREEN.toString()));
             } else if (qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) < 28.0 && qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) >= 25.0) {
                 country.setColor(Color.valueOf(ColorsLegend.LIGHT_GREEN.toString()));
-            } else if (qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) < 25.0 && qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) >= 22.0) {
+            } else if (qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) < 25.0 && qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) >= 24.0) {
                 country.setColor(Color.valueOf(ColorsLegend.YELLOW.toString()));
-            } else if (qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) < 22.0 && qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) >= 17.0) {
-                country.setColor(Color.valueOf(ColorsLegend.ORANGE.toString()));
-            } else if (qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) < 17.0) {
+            }else if (qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) < 24.0 && qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) >= 23.5) {
+                country.setColor(Color.valueOf(ColorsLegend.DARK_YELLOW.toString()));
+            } else if (qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) < 23.5 && qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) >= 23.0) {
+                country.setColor(Color.valueOf(ColorsLegend.DARK_YELLOW.toString()));
+            } else if (qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) < 23.0 && qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) >= 22.5) {
+                country.setColor(Color.valueOf(ColorsLegend.DARK_YELLOW.toString()));
+            } else if (qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) < 22.5 && qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) >= 22.0) {
+                country.setColor(Color.valueOf(ColorsLegend.DARK_YELLOW.toString()));
+            } else if (qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) < 22.0 && qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) >= 21.5) {
+                country.setColor(Color.valueOf(ColorsLegend.DARK_YELLOW.toString()));
+            } else if (qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) < 21.5 && qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) >= 20.0) {
+                country.setColor(Color.valueOf(ColorsLegend.DARK_YELLOW.toString()));
+            } else if (qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) < 20.0 && qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) >= 18.0) {
+                country.setColor(Color.valueOf(ColorsLegend.DARK_YELLOW.toString()));
+            }else if (qualityOfLife.getQualities().get(country.getName()).get("qol").get(year) < 18.0) {
                 country.setColor(Color.valueOf(ColorsLegend.RED.toString()));
             }
         }

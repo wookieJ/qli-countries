@@ -172,7 +172,7 @@
                               <Font size="18.0" />
                            </font>
                         </Button>
-                        <Slider fx:id="sliderYears" blockIncrement="1.0" majorTickUnit="1.0" max="2018.0" min="2008.0" minorTickCount="0" prefHeight="38.0" prefWidth="241.0" showTickLabels="true" showTickMarks="true" snapToTicks="true">
+                        <Slider fx:id="sliderYears" blockIncrement="1.0" majorTickUnit="1.0" max="2017.0" min="2008.0" minorTickCount="0" prefHeight="38.0" prefWidth="241.0" showTickLabels="true" showTickMarks="true" snapToTicks="true">
                            <opaqueInsets>
                               <Insets />
                            </opaqueInsets>
